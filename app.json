@@ -1,0 +1,30 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/ticket/ticket"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle":"black"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "自定义",
+        "iconPath": "asserts/images/tab_bar/custom.png",
+        "selectedIconPath": "asserts/images/tab_bar/custom_activated.png"
+      },
+      {
+        "pagePath": "pages/ticket/ticket",
+        "text": "我的券",
+        "iconPath": "asserts/images/tab_bar/ticket.png",
+        "selectedIconPath": "asserts/images/tab_bar/ticket_activated.png"
+      }
+    ]
+  }
+}
