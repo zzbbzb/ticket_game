@@ -25,6 +25,21 @@ Page({
     }
   },
 
+  // 点击转发
+  tapShare: function()
+  {
+    console.log("index/tapShare")
+  },
+
+  // 点击添加券
+  tapAddTicket: function()
+  {
+    console.log("index/tapAddTicket")
+    wx.navigateTo({
+      url: '/pages/addTicket/addTicket',
+    })
+  },
+
   // 更新玩家信息和其它信息
   updataUserInfoAndGetOtherInfo: function() {
     app.globalData.hasUserInfo = true;

@@ -1,0 +1,15 @@
+/* pages/addTicket/addTicket.wxss */
+@import "/weui-miniprogram/weui-wxss/dist/style/weui.wxss";
+
+.ticket_textarea{
+  width:auto;
+}
+
+.radio {
+  padding: 5px;
+}
+
+.section {
+  display: flex;
+  flex-direction: row;
+}

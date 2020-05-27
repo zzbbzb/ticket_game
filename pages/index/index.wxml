@@ -1,11 +1,12 @@
 <!--index.wxml-->
 <view class="container">
-  <view class="userinfo">
-    <button type="primary" wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-  </view>
-  
-  <view class="funcBtns">
-    <image class="btn givingBtn" src="/asserts/images/btns/giving.png"></image>
-    <image class="btn" src="/asserts/images/btns/add.png"></image>
-  </view>
+	<button type="primary" wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+
+	<block wx:else>
+		<view class="funcBtns">
+			<image class="btn givingBtn" src="/asserts/images/btns/giving.png" bindtap="tapShare"></image>
+			<image class="btn" src="/asserts/images/btns/add.png" bindtap="tapAddTicket"></image>
+		</view>
+	</block>
+
 </view>
