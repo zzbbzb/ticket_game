@@ -4,4 +4,8 @@
     <button type="primary" wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
   </view>
   
+  <view class="funcBtns">
+    <image class="btn givingBtn" src="/asserts/images/btns/giving.png"></image>
+    <image class="btn" src="/asserts/images/btns/add.png"></image>
+  </view>
 </view>

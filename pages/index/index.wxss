@@ -5,17 +5,19 @@
   align-items: center;
 }
 
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
+.funcBtns {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  bottom: 50rpx;
+  right: 60rpx;
 }
 
-.userinfo-nickname {
-  color: #aaa;
+.givingBtn {
+  margin-right: 30rpx;
 }
 
-.usermotto {
-  margin-top: 200px;
+.btn {
+  width: 100rpx;
+  height:100rpx;
 }

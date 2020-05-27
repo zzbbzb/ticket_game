@@ -22,10 +22,10 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    console.log("ticket onReady hasUserInfo = ", app.globalData.hasUserInfo)
-    this.setData({
-      hasUserInfo: app.globalData.hasUserInfo
-    })
+    // console.log("ticket onReady hasUserInfo = ", app.globalData.hasUserInfo)
+    // this.setData({
+    //   hasUserInfo: app.globalData.hasUserInfo
+    // })
   },
 
   /**
