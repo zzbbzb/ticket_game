@@ -130,10 +130,21 @@ Component({
         }
     },
     attached: function attached() {
+        var _this = this;
         var data = this.data;
-        this.setData({
-            className: data.typeClassMap[data.type] || ''
-        });
+        wx.getSystemInfo({
+            success: function success(res) {
+              var ios = !!(res.system.toLowerCase().search('ios') + 1);
+              _this.setData({
+                ios: ios,
+                statusBarHeight: res.statusBarHeight,
+                className: data.typeClassMap[data.type] || ''
+              });
+            }
+          });
+        // this.setData({
+        //     className: data.typeClassMap[data.type] || ''
+        // });
     },
 
     methods: {

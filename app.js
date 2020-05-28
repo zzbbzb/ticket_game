@@ -1,6 +1,6 @@
 //app.js
 App({
-  onLaunch: function () {
+  async onLaunch() {
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -20,12 +20,16 @@ App({
       })
     }
 
-    // 登录
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      }
-    })
+    await wx.cloud.callFunction({
+      name: "getopenid",
+    }).then(res => {
+      console.log("成功", res.result.openid);
+      this.globalData.openId = res.result.openid
+    }).catch(res => {
+      console.log("失败", res);
+    });
+    console.log("getUserOpenId")
+
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -52,8 +56,10 @@ App({
       }
     })
   },
+
   globalData: {
     userInfo: null,
-    hasUserInfo: false
+    hasUserInfo: false,
+    openId: ""
   }
 })

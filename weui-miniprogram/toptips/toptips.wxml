@@ -1,6 +1,10 @@
-<view class="weui-toptips {{className}} {{extClass}} {{show ? 'weui-toptips_show' :  ''}}">
+
+<view class="weui-extra" >
+  <view class="weui-toptips {{ios ? 'ios' : 'android'}} {{className}} {{extClass}} {{show ? 'weui-toptips_show' :  ''}}" style="margin-top: {{statusBarHeight}}px;">
     <block wx:if="{{msg}}">{{msg}}</block>
     <block wx:else>
         <slot></slot>
     </block>
+  </view>
+
 </view>

@@ -1,6 +1,7 @@
 //index.js
 //获取应用实例
 const app = getApp()
+const config = require("../../utils/config.js");
 
 Page({
   data: {
@@ -50,11 +51,40 @@ Page({
     })
   },
 
-  getUserInfo: function(e) {
-    console.log("index/getUserInfo e =", e)
-    app.globalData.userInfo = e.detail.userInfo
-    this.updataUserInfoAndGetOtherInfo();
-    var pages = getCurrentPages();
-    console.log(pages)
-  }
+  // 获得玩家信息
+  getUserInfo: function (e) {
+    console.log("getUserInfo")
+    console.log(e)
+    this.getUserInfoOperate(e)
+
+  },
+
+  // 获得玩家信息的操作
+  async getUserInfoOperate(e) {
+    if ('userInfo' in e.detail) {
+      app.globalData.userInfo = e.detail.userInfo;
+      this.updataUserInfoAndGetOtherInfo();
+
+      console.log("写入数据库 UserInfo")
+      // 写入数据库 UserInfo
+      await this.addUserInfo();
+    }
+  },
+  
+  // 写入userInfo数据库
+  async addUserInfo() {
+    await wx.cloud.callFunction({
+      name: "addData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
+        "dataJsonSet": {
+          "userInfo": app.globalData.userInfo
+        },
+        "delBeforeAdd": true
+      }
+    }).then(res => {
+      console.log(res)
+    })
+  },
+
 })

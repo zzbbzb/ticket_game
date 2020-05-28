@@ -12,21 +12,31 @@ Page({
 
     },
     rules: [{
-      name: 'foodName',
-      rules: {
-        required: true,
-        message: '菜品名称必填'
-      },
-    }, {
-      name: 'foodPrice',
-      rules: [{
-        required: true,
-        message: '菜品价格必填'
+        name: 'ticketName',
+        rules: {
+          required: true,
+          message: '券名称必填'
+        },
       }, {
-        isNum: true,
-        message: '菜品价格要是数字'
-      }],
-    }],
+        name: 'ticketDetail',
+        rules: {
+          required: true,
+          message: '券详细信息必填'
+        },
+      }, {
+        name: 'ticketUseCount',
+        rules: {
+          required: true,
+          message: '使用次数'
+        },
+      },{
+        name: 'useTime',
+        rules: {
+          required: true,
+          message: '耗时时间不能为空'
+        },
+      }
+    ],
 
     radio_items: [
       {name: '0', value: '计数券', checked: true},
@@ -39,6 +49,8 @@ Page({
 
     startDate: "2015-01-01",
     endDate: "2015-01-01",
+
+    validateFormState: false
   },
 
   /**
@@ -63,20 +75,143 @@ Page({
     return (Array(n).join(0) + num).slice(-n);
   },
 
-  bindDateChange: function (e) {
+  // 表单input输入内容
+  formInputChange: function(e){
+    const {
+      field
+    } = e.currentTarget.dataset
+ 
     this.setData({
-        startDate: e.detail.value,
-        [`formData.date`]: e.detail.value
+      [`formData.${field}`]: e.detail.value
+    })
+
+    console.log("formData=", this.data.formData)
+  },
+
+  // 表单textarea输入内容
+  formTextAreaChange: function(e){
+    const {
+      field
+    } = e.currentTarget.dataset
+
+    this.setData({
+      [`formData.${field}`]: e.detail.value
     })
   },
 
+  // 表单radio 输入内容
   radioChange: function (e) {
     console.log('radio发生change事件，携带value值为：', typeof(e.detail.value))
 
     let radioValue = parseInt(e.detail.value);
 
+    console.log(this.data.rules)
+    console.log(this.data.rules.length)
+    for(let i = 0; i < this.data.rules.length; i++)
+    {
+      console.log("this.data.rules[i]=", this.data.rules[i]);
+      let rule = this.data.rules[i]
+      console.log(rule.name)
+      if(rule.name === "ticketUseCount" && radioValue === 1)
+      {
+        this.setData({
+          [rules`${i}`.rules.required]: false,
+        })
+      }else if(radioValue === 0)
+      {
+        if(rule.name === "useTime")
+        {
+          this.setData({
+            [rules`${i}`.rules.required]: false,
+          })
+        }
+      }
+    }
+
     this.setData({
-      radioValue: radioValue
+      radioValue: radioValue,
+      [`formData.ticketType`]: radioValue
+    })
+
+    console.log("formData=", this.data.formData)
+  },
+
+  // 表单 耗时类型 输入内容
+  bindUseTimeTypeChange: function(e) {
+    console.log('picker country 发生选择改变，携带值为', e.detail.value);
+
+    this.setData({
+      timeTypeIndex: e.detail.value,
+      [`formData.ticketType`]: this.data.timeType[e.detail.value]
+    })
+
+    console.log("formData=", this.data.formData)
+  },
+
+  //表单 日期 输入内容
+  bindDateChange: function (e) {
+    const {
+      field
+    } = e.currentTarget.dataset
+
+    let date = e.detail.value;
+    console.log("date=", date)
+
+    if(field == "startDate")
+    {
+      this.setData({
+        startDate: date
+      })
+    }
+    else{
+      this.setData({
+        endDate: date
+      })
+    }
+
+    date += " 00:00:00";
+    let dateTimestamp = new Date(date).getTime() 
+
+    this.setData({
+      [`formData.${field}`]: dateTimestamp
+    })
+
+    console.log("dateTimestamp=", dateTimestamp)
+  },
+
+  // 提交表单
+  submitForm: function(){
+    // 检验数据
+    this.validateFormData();
+
+    // 保存数据库
+    if (this.data.validateFormState) {
+      this.upLoadFormDataAndReturn();
+    }
+  },
+
+   // 验证表单数据
+   async validateFormData () {
+    await this.selectComponent('#form').validate((valid, errors) => {
+      console.log('valid', valid, errors)
+      if (!valid) {
+        const firstError = Object.keys(errors)
+        if (firstError.length) {
+          this.setData({
+            error: errors[firstError[0]].message,
+            validateFormState: false
+          })
+
+        }
+      } else {
+        
+        start
+
+        // 校验通过
+        this.setData({
+          validateFormState: true
+        })
+      }
     })
   },
 
