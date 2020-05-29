@@ -1,0 +1,64 @@
+/* components/m-ticket/m-ticket.wxss */
+.ticket_container {
+  display: flex;
+  flex-direction: column;
+  border: 5rpx solid black;
+  margin: 20rpx 30rpx 20rpx 30rpx;
+}
+
+.ticket_giving_name {
+  border-bottom: 1rpx solid black;
+}
+
+.ticket_content {
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket_head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.ticket_head_name {
+  font-size: 60rpx;
+  font-weight: bold;
+  margin: 10rpx 30rpx 10rpx 10rpx;
+}
+
+.ticket_foot {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.ticket_use_count {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 10rpx;
+}
+
+.ticket_use_count_unit {
+  font-size: 50rpx;
+  margin-left: 10rpx;
+}
+
+.ticket_use_time {
+  position: relative;
+  font-size: 25rpx;
+  width: 100%;
+  align-items: flex-end;
+}
+
+.ticket_expiration_time {
+  position: absolute;
+  right: 20rpx;
+}
+
+.ticket_use_time_container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}

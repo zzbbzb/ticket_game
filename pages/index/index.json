@@ -1,5 +1,6 @@
 {
   "component": true,
   "usingComponents": {
+    "m-ticket": "/components/m-ticket/m-ticket"
   }
 }

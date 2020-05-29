@@ -1,4 +1,7 @@
 // pages/addTicket/addTicket.js
+const app = getApp();
+const config = require("../../utils/config.js");
+
 Page({
 
   /**
@@ -12,35 +15,40 @@ Page({
 
     },
     rules: [{
-        name: 'ticketName',
-        rules: {
-          required: true,
-          message: '券名称必填'
-        },
-      }, {
-        name: 'ticketDetail',
-        rules: {
-          required: true,
-          message: '券详细信息必填'
-        },
-      }, {
-        name: 'ticketUseCount',
-        rules: {
-          required: true,
-          message: '使用次数'
-        },
-      },{
-        name: 'useTime',
-        rules: {
-          required: true,
-          message: '耗时时间不能为空'
-        },
-      }
-    ],
+      name: 'ticketName',
+      rules: {
+        required: true,
+        message: '券名称必填'
+      },
+    }, {
+      name: 'ticketDetail',
+      rules: {
+        required: true,
+        message: '券详细信息必填'
+      },
+    }, {
+      name: 'ticketUseCount',
+      rules: {
+        required: true,
+        message: '使用次数'
+      },
+    }, {
+      name: 'useTime',
+      rules: {
+        required: false,
+        message: '耗时时间不能为空'
+      },
+    }],
 
-    radio_items: [
-      {name: '0', value: '计数券', checked: true},
-      {name: '1', value: '时效券'}
+    radio_items: [{
+        name: '0',
+        value: '计数券',
+        checked: true
+      },
+      {
+        name: '1',
+        value: '时效券'
+      }
     ],
     radioValue: 0,
 
@@ -64,23 +72,32 @@ Page({
     console.log(month)
     console.log(this.prefixZero(month, 2))
     let curTime = year + "-" + this.prefixZero(month, 2) + "-" + this.prefixZero(day, 2);
+
+    let startDateTimestamp = new Date(curTime + " 00:00:00").getTime();
+    let endDateTimestamp = new Date(curTime + " 11:59:59").getTime();
+
     this.setData({
       startDate: curTime,
-      endDate: curTime
+      endDate: curTime,
+      [`formData.startDate`]: startDateTimestamp,
+      [`formData.endDate`]: endDateTimestamp,
+      [`formData.useTimeType`]: this.data.timeType[this.data.timeTypeIndex],
+      [`formData.ticketType`]: this.data.radioValue
+
     })
   },
 
   // 给不足位的数字前面补0
-  prefixZero: function(num, n) {
+  prefixZero: function (num, n) {
     return (Array(n).join(0) + num).slice(-n);
   },
 
   // 表单input输入内容
-  formInputChange: function(e){
+  formInputChange: function (e) {
     const {
       field
     } = e.currentTarget.dataset
- 
+
     this.setData({
       [`formData.${field}`]: e.detail.value
     })
@@ -89,7 +106,7 @@ Page({
   },
 
   // 表单textarea输入内容
-  formTextAreaChange: function(e){
+  formTextAreaChange: function (e) {
     const {
       field
     } = e.currentTarget.dataset
@@ -101,28 +118,46 @@ Page({
 
   // 表单radio 输入内容
   radioChange: function (e) {
-    console.log('radio发生change事件，携带value值为：', typeof(e.detail.value))
+    console.log('radio发生change事件，携带value值为：', typeof (e.detail.value))
 
     let radioValue = parseInt(e.detail.value);
 
     console.log(this.data.rules)
     console.log(this.data.rules.length)
-    for(let i = 0; i < this.data.rules.length; i++)
-    {
-      console.log("this.data.rules[i]=", this.data.rules[i]);
-      let rule = this.data.rules[i]
-      console.log(rule.name)
-      if(rule.name === "ticketUseCount" && radioValue === 1)
-      {
-        this.setData({
-          [rules`${i}`.rules.required]: false,
-        })
-      }else if(radioValue === 0)
-      {
-        if(rule.name === "useTime")
-        {
+    if (radioValue === 1) {
+      for (let i = 0; i < this.data.rules.length; i++) {
+        console.log("this.data.rules[i]=", this.data.rules[i]);
+        let rule = this.data.rules[i]
+        console.log(rule.name)
+
+        if (rule.name === "ticketUseCount") {
+          let key = "rules[" + i + "].rules.required"
           this.setData({
-            [rules`${i}`.rules.required]: false,
+            [key]: false,
+          })
+        }
+
+        if (rule.name === "useTime") {
+          let key = "rules[" + i + "].rules.required"
+          this.setData({
+            [key]: true,
+          })
+        }
+      }
+    } else if (radioValue === 0) {
+      for (let i = 0; i < this.data.rules.length; i++) {
+        let rule = this.data.rules[i]
+        if (rule.name === "ticketUseCount") {
+          let key = "rules[" + i + "].rules.required"
+          this.setData({
+            [key]: true,
+          })
+        }
+
+        if (rule.name === "useTime") {
+          let key = "rules[" + i + "].rules.required"
+          this.setData({
+            [key]: false,
           })
         }
       }
@@ -137,12 +172,12 @@ Page({
   },
 
   // 表单 耗时类型 输入内容
-  bindUseTimeTypeChange: function(e) {
+  bindUseTimeTypeChange: function (e) {
     console.log('picker country 发生选择改变，携带值为', e.detail.value);
 
     this.setData({
       timeTypeIndex: e.detail.value,
-      [`formData.ticketType`]: this.data.timeType[e.detail.value]
+      [`formData.useTimeType`]: this.data.timeType[e.detail.value]
     })
 
     console.log("formData=", this.data.formData)
@@ -157,30 +192,33 @@ Page({
     let date = e.detail.value;
     console.log("date=", date)
 
-    if(field == "startDate")
-    {
+    if (field == "startDate") {
       this.setData({
         startDate: date
       })
-    }
-    else{
+      date += " 00:00:00";
+    } else {
       this.setData({
         endDate: date
       })
+      date += " 11:59:59";
     }
 
-    date += " 00:00:00";
-    let dateTimestamp = new Date(date).getTime() 
+    
+    let dateTimestamp = new Date(date).getTime()
+
 
     this.setData({
       [`formData.${field}`]: dateTimestamp
     })
 
+    console.log("formData=", this.data.formData)
+
     console.log("dateTimestamp=", dateTimestamp)
   },
 
   // 提交表单
-  submitForm: function(){
+  submitForm: function () {
     // 检验数据
     this.validateFormData();
 
@@ -190,8 +228,58 @@ Page({
     }
   },
 
-   // 验证表单数据
-   async validateFormData () {
+  // 更新表单数据并且返回主页面
+  async upLoadFormDataAndReturn() {
+    console.log("formData = ", this.data.formData);
+    await this.uploadFormData();
+
+    console.log("退出添加券")
+
+    wx.navigateBack({
+      delta: this.data.backDelta
+    });
+  },
+
+  // 更新form中的数据
+  async uploadFormData() {
+
+    // let coverImgPath = this.data.formData[this.data.coverPic];
+    // 创建时间
+    let curTimeStamp = new Date().getTime();
+    // 券id
+    let ticketId = app.globalData.openId + curTimeStamp;
+
+    let use_count = 'ticketUseCount' in this.data.formData ?  this.data.formData["ticketUseCount"]: "0";
+    let use_time = 'useTime' in this.data.formData ?  this.data.formData["useTime"]: "0";
+
+    // 保存券进入数据库
+    await wx.cloud.callFunction({
+      name: "addData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.TICKET,
+        "dataJsonSet": {
+          "ticket_id": ticketId,
+          "ticket_name": this.data.formData["ticketName"],
+          "ticket_type": this.data.formData["ticketType"],
+          "ticket_detail_info": this.data.formData["ticketDetail"],
+          "create_time": curTimeStamp,
+          "start_use_time": this.data.formData["startDate"],
+          "end_use_time": this.data.formData["endDate"],
+          "use_time_type": this.data.formData["useTimeType"],
+          "use_count": use_count,
+          "use_time": use_time,
+          "ticket_state": 0,
+          "giving_openid": app.globalData.openId
+        },
+        "waitFlag": true
+      }
+    }).then(res => {
+      console.log("成功保存,", res)
+    })
+  },
+
+  // 验证表单数据
+  async validateFormData() {
     await this.selectComponent('#form').validate((valid, errors) => {
       console.log('valid', valid, errors)
       if (!valid) {
@@ -201,16 +289,24 @@ Page({
             error: errors[firstError[0]].message,
             validateFormState: false
           })
-
         }
       } else {
-        
-        start
 
-        // 校验通过
-        this.setData({
-          validateFormState: true
-        })
+        // 检测结束时间不能小于开始时间
+        console.log(this.data.formData["startDate"] )
+        console.log(this.data.formData["endDate"] )
+        if (this.data.formData["startDate"] > this.data.formData["endDate"]) {
+          this.setData({
+            error: "结束时间不能小于开始时间",
+            validateFormState: false
+          })
+        } else {
+          // 校验通过
+          this.setData({
+            validateFormState: true
+          })
+        }
+
       }
     })
   },
@@ -235,9 +331,7 @@ Page({
       wx.navigateBack({
         delta: this.data.backDelta
       })
-    }
-    else
-    {
+    } else {
       // 确认, 还继续创建新券
       this.setData({
         showDialog: !this.data.showDialog,

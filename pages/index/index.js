@@ -7,7 +7,8 @@ Page({
   data: {
     motto: 'Hello World',
     userInfo: {},
-    hasUserInfo: false
+    hasUserInfo: false,
+    ticketList:[]
   },
 
   onLoad: function () {
@@ -26,6 +27,27 @@ Page({
     }
   },
 
+  async getTickets() {
+    await wx.cloud.callFunction({
+      name: "queryData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.TICKET,
+        "whereObject": {
+          "_openid": app.globalData.openId,
+          "dataJsonSet.giving_openid": app.globalData.openId
+        },
+      }
+    }).then(res => {
+      console.log("getTickets=", res)
+      const findList = res.result.data
+      console.log("getTickets=", findList)
+      this.setData({
+        ticketList: findList
+      })
+      console.log(this.data.ticketList)
+    })
+  },
+
   // 点击转发
   tapShare: function()
   {
@@ -42,13 +64,15 @@ Page({
   },
 
   // 更新玩家信息和其它信息
-  updataUserInfoAndGetOtherInfo: function() {
+  async updataUserInfoAndGetOtherInfo() {
     app.globalData.hasUserInfo = true;
     console.log("app.globalData.hasUserInfo=", app.globalData.hasUserInfo)
     this.setData({
       hasUserInfo: app.globalData.hasUserInfo,
       userInfo: app.globalData.userInfo
     })
+
+    await this.getTickets();
   },
 
   // 获得玩家信息
@@ -68,6 +92,8 @@ Page({
       console.log("写入数据库 UserInfo")
       // 写入数据库 UserInfo
       await this.addUserInfo();
+
+      await this.getTickets();
     }
   },
   

@@ -1,0 +1,30 @@
+<!--components/m-ticket/m-ticket.wxml-->
+<view class="ticket_container">
+	<view class="ticket_giving_name">
+		{{dataJsonSet.giving_openid}}
+	</view>
+	<view class="ticket_content">
+		<view class="ticket_head">
+			<view class="ticket_head_name">{{dataJsonSet.ticket_name}}</view>
+			<view class="ticket_head_detail">{{dataJsonSet.ticket_detail_info}}</view>
+
+		</view>
+		<view class="ticket_foot">
+			<view class="ticket_use_count">
+				<block wx:if="{{dataJsonSet.ticket_type === 0}}">
+					<view>{{dataJsonSet.use_count}}</view>
+					<view class="ticket_use_count_unit">次</view>
+				</block>
+				<block wx:else>
+					<view>1天 00:00:00</view>
+				</block>
+			</view>
+
+			<view class="ticket_use_time">
+				<view class="ticket_expiration_time">可用时间:{{dataJsonSet.start_use_time}}-{{dataJsonSet.end_use_time}} </view>
+			</view>
+
+		</view>
+	</view>
+
+</view>

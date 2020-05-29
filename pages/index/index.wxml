@@ -3,6 +3,11 @@
 	<button type="primary" wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
 
 	<block wx:else>
+		<view class="ticketContainer">
+			<block wx:for="{{ticketList}}" wx:key="index">
+				<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}"></m-ticket>
+			</block>
+		</view>
 		<view class="funcBtns">
 			<image class="btn givingBtn" src="/asserts/images/btns/giving.png" bindtap="tapShare"></image>
 			<image class="btn" src="/asserts/images/btns/add.png" bindtap="tapAddTicket"></image>

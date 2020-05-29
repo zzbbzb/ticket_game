@@ -21,3 +21,10 @@
   width: 100rpx;
   height:100rpx;
 }
+
+.ticketContainer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+}
