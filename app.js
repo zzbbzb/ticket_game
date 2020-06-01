@@ -15,7 +15,7 @@ App({
         //   此处请填入环境 ID, 环境 ID 可打开云控制台查看
         //   如不填则使用默认环境（第一个创建的环境）
         // env: 'my-env-id',
-        env:'test-qjl9w',
+        env: 'test-qjl9w',
         traceUser: true,
       })
     }
@@ -30,6 +30,8 @@ App({
     });
     console.log("getUserOpenId")
 
+
+
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -40,8 +42,7 @@ App({
               // 可以将 res 发送给后台解码出 unionId
               this.globalData.userInfo = res.userInfo
 
-              if(this.globalData.userInfo != null)
-              {
+              if (this.globalData.userInfo != null) {
                 this.globalData.hasUserInfo = true;
               }
 
@@ -55,6 +56,21 @@ App({
         }
       }
     })
+  },
+
+  GetCurrentPage: function()
+  {
+    let pages = getCurrentPages() //获取加载的页面
+    let currentPage = pages[pages.length - 1] //获取当前页面的对象
+    return currentPage;
+  },
+  GetCurrentPageUrl: function()
+  {
+    let currentPage = this.GetCurrentPage() //获取当前页面的对象
+    console.log("currentPage=", currentPage)
+    let url = currentPage.route //当前页面url
+    console.log("GetCurrentPageUrl url=", url);
+    return url;
   },
 
   globalData: {

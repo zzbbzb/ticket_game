@@ -69,8 +69,7 @@ Page({
     let year = curDate.getFullYear();
     let month = curDate.getMonth() + 1;
     let day = curDate.getDate();
-    console.log(month)
-    console.log(this.prefixZero(month, 2))
+
     let curTime = year + "-" + this.prefixZero(month, 2) + "-" + this.prefixZero(day, 2);
 
     let startDateTimestamp = new Date(curTime + " 00:00:00").getTime();
@@ -167,8 +166,6 @@ Page({
       radioValue: radioValue,
       [`formData.ticketType`]: radioValue
     })
-
-    console.log("formData=", this.data.formData)
   },
 
   // 表单 耗时类型 输入内容
@@ -211,26 +208,22 @@ Page({
     this.setData({
       [`formData.${field}`]: dateTimestamp
     })
-
-    console.log("formData=", this.data.formData)
-
-    console.log("dateTimestamp=", dateTimestamp)
   },
 
   // 提交表单
-  submitForm: function () {
+  async submitForm () {
     // 检验数据
     this.validateFormData();
 
     // 保存数据库
     if (this.data.validateFormState) {
-      this.upLoadFormDataAndReturn();
+      await this.upLoadFormDataAndReturn();
     }
   },
 
   // 更新表单数据并且返回主页面
   async upLoadFormDataAndReturn() {
-    console.log("formData = ", this.data.formData);
+
     await this.uploadFormData();
 
     console.log("退出添加券")
@@ -251,7 +244,7 @@ Page({
 
     let use_count = 'ticketUseCount' in this.data.formData ?  this.data.formData["ticketUseCount"]: "0";
     let use_time = 'useTime' in this.data.formData ?  this.data.formData["useTime"]: "0";
-
+    
     // 保存券进入数据库
     await wx.cloud.callFunction({
       name: "addData",
@@ -269,7 +262,8 @@ Page({
           "use_count": use_count,
           "use_time": use_time,
           "ticket_state": 0,
-          "giving_openid": app.globalData.openId
+          "giving_openid": app.globalData.openId,
+          "giving_name": app.globalData.userInfo.nickName
         },
         "waitFlag": true
       }

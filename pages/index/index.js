@@ -2,6 +2,8 @@
 //获取应用实例
 const app = getApp()
 const config = require("../../utils/config.js");
+const db = wx.cloud.database()
+let watcher = null
 
 Page({
   data: {
@@ -25,6 +27,77 @@ Page({
         this.updataUserInfoAndGetOtherInfo()
       }
     }
+    console.log("index onlauch")
+    // 隐藏右上角分享
+    wx.hideShareMenu()
+  },
+
+  onShow: function() {
+    console.log("index onShow")
+    if(watcher == null){
+      watcher = db.collection("Ticket")
+      .where({
+        // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
+        _openid: app.globalData.open_id,
+        'dataJsonSet.giving_openid': app.globalData.open_id
+      })
+      // 发起监听
+      .watch({
+        onChange: (snapshot) => {
+          console.log('app snapshot onShow', snapshot)
+          if (snapshot.docChanges != undefined && snapshot.docChanges.length != 0) {
+            for(let i = 0; i < snapshot.docChanges.length; i++)
+            {
+              console.log('app snapshot onShow', snapshot.docChanges[i].dataType)
+              if(snapshot.docChanges[i].dataType !== 'init'){
+                let tmpList = this.data.ticketList;
+                console.log('app snapshot docs', snapshot.docChanges[i].doc)
+
+                tmpList.push(snapshot.docChanges[i].doc);
+                this.setData({
+                  ticketList: tmpList
+                })
+                console.log("this.data.ticketList=", this.data.ticketList)
+              }
+            }
+            
+            // let url = this.GetCurrentPageUrl() //当前页面url
+            // console.log("app onshow url=", url);
+            // let dataType = snapshot.docChanges[0].dataType;
+            // console.log('app dataType', dataType)
+            // let data = snapshot.docChanges[0].doc.red_dots;
+            // this.UpdateListNum(data.list_num);
+            // this.globalData.red_dots.list_num = data.list_num
+            // if(url === "pages/list/list" && data.list_num != 0)
+            // {
+            //   console.log("app refresh list onshow");
+            //   this.globalData.currentPage = url;
+            //   this.GetCurrentPage().onShow();
+              // if(this.RefreshListPage)
+              // {
+              //   this.RefreshListPage(url);
+              // }
+            // }
+          }
+        },
+        onError: (err) => {
+          console.error('the watch closed because of error', err)
+        }
+      })
+    }
+   
+  },
+
+  onHide:function(){
+    console.log("index onHide")
+    // if(watcher != null){
+    //   watcher.close();
+    //   watcher = null;
+    // }
+  },
+
+  checkboxChange: function(e){
+    console.log('checkbox发生change事件，携带value值为：', e.detail)
   },
 
   async getTickets() {
@@ -48,10 +121,21 @@ Page({
     })
   },
 
-  // 点击转发
-  tapShare: function()
-  {
-    console.log("index/tapShare")
+  async getUserName(openId, name) {
+    await wx.cloud.callFunction({
+      name: "queryData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
+        "whereObject": {
+          "_openid": openId,
+        },
+      }
+    }).then(res => {
+      const findList = res.result.data
+      if(findList.length > 0){
+        name = findList[0].dataJsonSet.nickName
+      }
+    })
   },
 
   // 点击添加券
@@ -112,5 +196,17 @@ Page({
       console.log(res)
     })
   },
+
+  // 转发
+  onShareAppMessage: function(res){
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    return {
+      title: '自定义转发标题',
+      path: 'pages/receiveTicket/receiveTicket'
+    }
+  }
 
 })

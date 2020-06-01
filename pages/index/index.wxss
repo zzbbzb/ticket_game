@@ -9,7 +9,7 @@
   position: fixed;
   display: flex;
   flex-direction: row;
-  bottom: 50rpx;
+  bottom: 30rpx;
   right: 60rpx;
 }
 
@@ -28,3 +28,23 @@
   flex-direction: column;
 
 }
+
+.ticket_slot {
+  width:25vw;
+  display: flex;
+  justify-content: center;
+  margin-right: 20rpx;
+  margin-left: 20rpx;
+}
+
+.sharebtn{
+  border-radius: 100%;
+  background-repeat:no-repeat;
+  border:none;
+  position: relative;
+  }
+
+  .givingImg{
+    position: absolute;
+    right: 2rpx;
+  }

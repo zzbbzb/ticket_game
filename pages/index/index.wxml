@@ -4,12 +4,30 @@
 
 	<block wx:else>
 		<view class="ticketContainer">
-			<block wx:for="{{ticketList}}" wx:key="index">
-				<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}"></m-ticket>
-			</block>
+
+			<label class="weui-cell weui-check__label" wx:for="{{items}}" wx:key="{{item.value}}">
+				<view class="weui-cell__hd">
+					<checkbox value="{{item.value}}" checked="{{item.checked}}" />
+				</view>
+				<view class="weui-cell__bd">{{item.name}}</view>
+			</label>
+
+			<checkbox-group bindchange="checkboxChange">
+				<block wx:for="{{ticketList}}" wx:key="index">
+					<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}">
+						<view class="ticket_slot" slot="ticket_slot">
+							<checkbox value="{{item.dataJsonSet.ticket_id}}" checked="{{item.checked}}" />
+						</view>
+					</m-ticket>
+				</block>
+			</checkbox-group>
 		</view>
 		<view class="funcBtns">
-			<image class="btn givingBtn" src="/asserts/images/btns/giving.png" bindtap="tapShare"></image>
+		 <button class='btn sharebtn givingBtn' open-type="share">
+		 	<image class="btn givingImg" src="/asserts/images/btns/giving.png" bindtap="tapShare"></image>
+		 </button>
+		 
+			
 			<image class="btn" src="/asserts/images/btns/add.png" bindtap="tapAddTicket"></image>
 		</view>
 	</block>

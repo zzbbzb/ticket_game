@@ -1,16 +1,16 @@
 {
-  "pages":[
+  "pages": [
     "pages/index/index",
     "pages/ticket/ticket",
-    "pages/addTicket/addTicket"
+    "pages/addTicket/addTicket",
+    "pages/receiveTicket/receiveTicket"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle":"black"
+    "navigationBarTextStyle": "black"
   },
-  "style": "v2",
   "sitemapLocation": "sitemap.json",
   "tabBar": {
     "list": [
