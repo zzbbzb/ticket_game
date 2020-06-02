@@ -1,2 +1,11 @@
 <!--pages/receiveTicket/receiveTicket.wxml-->
-<text>pages/receiveTicket/receiveTicket.wxml</text>
+<block wx:if="{{ticketList}}" wx:key="index">
+  <m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}">
+						<!-- <view class="ticket_slot" slot="ticket_slot">
+							<checkbox value="{{item.dataJsonSet.ticket_id}}" checked="{{item.checked}}" />
+						</view> -->
+	</m-ticket>
+</block>
+
+
+<button type="primary" class="getTicket" style="height:{{statusBarHeight}}px">一键领取</button>

@@ -10,7 +10,8 @@ Page({
     motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
-    ticketList:[]
+    ticketList: [],
+    selectedTicketList: []
   },
 
   onLoad: function () {
@@ -98,6 +99,9 @@ Page({
 
   checkboxChange: function(e){
     console.log('checkbox发生change事件，携带value值为：', e.detail)
+    this.setData({
+      selectedTicketList: e.detail.value
+    })
   },
 
   async getTickets() {
@@ -203,10 +207,38 @@ Page({
       // 来自页面内转发按钮
       console.log(res.target)
     }
+
+    return this.shareDetailOP()
+  },
+
+  async shareDetailOP(){
+
+    if(this.data.selectedTicketList.length != 0)
+    {
+      let curTimeStamp = new Date().getTime();
+      // 券id
+      let givingTicketId = app.globalData.openId + curTimeStamp;
+      await await wx.cloud.callFunction({
+        name: "addData",
+        data: {
+          "dataBaseName": config.DATA_BASE_NAME.GIVING_TICKET,
+          "dataJsonSet": {
+            "giving_ticket_id": givingTicketId,
+            "giving_openid": app.globalData.openId,
+            "giving_tickets_id_list": this.data.selectedTicketList,
+            "create_time": curTimeStamp
+          },
+          "delBeforeAdd": true
+        }
+      }).then(res => {
+        console.log(res)
+      })
+    }
+
     return {
       title: '自定义转发标题',
-      path: 'pages/receiveTicket/receiveTicket'
-    }
+      path: 'pages/receiveTicket/receiveTicket?givingTicketId=' + givingTicketId
+    } 
   }
 
 })

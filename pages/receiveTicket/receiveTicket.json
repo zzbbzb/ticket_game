@@ -1,3 +1,5 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "m-ticket": "/components/m-ticket/m-ticket"
+  }
 }

@@ -1,7 +1,8 @@
 // 数据库名称
 const DATA_BASE_NAME = {
   USER_INFO: "UserInfo",
-  TICKET: "Ticket"
+  TICKET: "Ticket",
+  GIVING_TICKET: "GivingTicket"
 };
 
 module.exports = {
