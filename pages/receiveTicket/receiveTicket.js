@@ -2,7 +2,6 @@
 
 const app = getApp()
 const config = require("../../utils/config.js");
-const db = wx.cloud.database()
 
 Page({
 
@@ -19,6 +18,14 @@ Page({
   onLoad: function (options) {
     console.log("receiveTicket onLoad=", options)
     let givingTicketId = options.givingTicketId;
+
+    let selectedTicketList = options.selectedTicketList
+    selectedTicketList = selectedTicketList.trim()
+    console.log("options.selectedTicketList=",selectedTicketList)
+
+    let givingTicketList = JSON.parse(selectedTicketList);
+    console.log("givingTicketList=", givingTicketList)
+
     // 获得逻辑
     let systemInfo = wx.getSystemInfoSync()
     let pxToRpxScale = 750 / systemInfo.windowWidth;
@@ -88,10 +95,4 @@ Page({
 
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  }
 })

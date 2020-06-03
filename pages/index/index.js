@@ -11,7 +11,8 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     ticketList: [],
-    selectedTicketIndexList: []
+    selectedTicketIndexList: [],
+    isShowGiving: false
   },
 
   onLoad: function () {
@@ -30,7 +31,7 @@ Page({
     }
     console.log("index onlauch")
     // 隐藏右上角分享
-    wx.hideShareMenu()
+    // wx.hideShareMenu()
   },
 
   onShow: function() {
@@ -89,18 +90,12 @@ Page({
    
   },
 
-  onHide:function(){
-    console.log("index onHide")
-    // if(watcher != null){
-    //   watcher.close();
-    //   watcher = null;
-    // }
-  },
-
   checkboxChange: function(e){
     console.log('checkbox发生change事件，携带value值为：', e.detail)
+    
     this.setData({
-      selectedTicketIndexList: e.detail.value
+      selectedTicketIndexList: e.detail.value,
+      isShowGiving: e.detail.value.length > 0 ? true : false
     })
   },
 
@@ -202,52 +197,59 @@ Page({
   },
 
   // 转发
-  onShareAppMessage: function(res){
+  onShareAppMessage:function(res){
     if (res.from === 'button') {
       // 来自页面内转发按钮
-      console.log(res.target)
+      console.log("res.target=", res.target)
     }
-    return {
-      title: '自定义转发标题',
-      path: 'pages/receiveTicket/receiveTicket?givingTicketId=' + givingTicketId
-    } 
-    // return this.shareDetailOP()
-  },
-
-  async shareDetailOP(){
 
     let givingTicketId = "";
+    let curTimeStamp = 0;
+    let selectedTicketList = [];
     if(this.data.selectedTicketIndexList.length != 0)
     {
-      let curTimeStamp = new Date().getTime();
+      curTimeStamp = new Date().getTime();
       // 券id
       givingTicketId = app.globalData.openId + curTimeStamp;
-      let selectedTicketList = []
+      
       for(let i = 0; i < this.data.selectedTicketIndexList.length; i++)
       {
         selectedTicketList.push(this.data.ticketList[this.data.selectedTicketIndexList[i]])
       }
-      console.log("selectedTicketList=", selectedTicketList);
-      await await wx.cloud.callFunction({
-        name: "addData",
-        data: {
-          "dataBaseName": config.DATA_BASE_NAME.GIVING_TICKET,
-          "dataJsonSet": {
-            "giving_ticket_id": givingTicketId,
-            "giving_openid": app.globalData.openId,
-            "giving_tickets_lists": selectedTicketList,
-            "create_time": curTimeStamp
-          }
-        }
-      }).then(res => {
-        console.log(res)
+
+      this.addGivingTicketInfo({
+        givingTicketId: givingTicketId,
+        selectedTicketList: selectedTicketList,
+        curTimeStamp: curTimeStamp
       })
+
     }
+    console.log("givingTicketId=", givingTicketId)
+    console.log("curTimeStamp=", curTimeStamp)
+    console.log("selectedTicketList=", JSON.stringify(selectedTicketList))
 
     return {
       title: '自定义转发标题',
-      path: 'pages/receiveTicket/receiveTicket?givingTicketId=' + givingTicketId
-    } 
+      path: '/pages/receiveTicket/receiveTicket?givingTicketId=' + givingTicketId + "&curTimeStamp=" + curTimeStamp + "&selectedTicketList=" + JSON.stringify(selectedTicketList)
+    ,  success: function(res) {
+      console.log("111 =", res)
+      }
+      } 
+  },
+
+  async addGivingTicketInfo(options){
+    await wx.cloud.callFunction({
+      name: "addData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.GIVING_TICKET,
+        "dataJsonSet": {
+          "giving_ticket_id":options.givingTicketId,
+          "giving_openid": app.globalData.openId,
+          "giving_tickets_lists": options.selectedTicketList,
+          "create_time": options.curTimeStamp
+        }
+      }
+    })
   }
 
 })

@@ -23,11 +23,12 @@
 			</checkbox-group>
 		</view>
 		<view class="funcBtns">
-		 <button class='btn sharebtn givingBtn' open-type="share">
-		 	<image class="btn givingImg" src="/asserts/images/btns/giving.png" bindtap="tapShare"></image>
-		 </button>
-		 
-			
+			<block wx:if="{{isShowGiving}}">
+				<button class='btn sharebtn givingBtn' open-type="share">
+					<image class="btn givingImg" src="/asserts/images/btns/giving.png" bindtap="tapShare"></image>
+				</button>
+			</block>
+
 			<image class="btn" src="/asserts/images/btns/add.png" bindtap="tapAddTicket"></image>
 		</view>
 	</block>

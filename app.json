@@ -1,9 +1,9 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/receiveTicket/receiveTicket",
     "pages/ticket/ticket",
-    "pages/addTicket/addTicket",
-    "pages/receiveTicket/receiveTicket"
+    "pages/addTicket/addTicket"
   ],
   "window": {
     "backgroundTextStyle": "light",
