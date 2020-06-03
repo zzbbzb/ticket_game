@@ -16,7 +16,7 @@
 				<block wx:for="{{ticketList}}" wx:key="index">
 					<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}">
 						<view class="ticket_slot" slot="ticket_slot">
-							<checkbox value="{{item.dataJsonSet.ticket_id}}" checked="{{item.checked}}" />
+							<checkbox value="{{index}}" checked="{{item.checked}}" />
 						</view>
 					</m-ticket>
 				</block>

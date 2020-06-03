@@ -71,7 +71,7 @@
 					"id": 1,
 					"name": "pages/receiveTicket/receiveTicket",
 					"pathName": "pages/receiveTicket/receiveTicket",
-					"query": "givingTicketId=\"otlcp45jTeCFRlAJEBk4tN95-YE81591088162958\"",
+					"query": "givingTicketId= \"otlcp45jTeCFRlAJEBk4tN95-YE81591113836980\"",
 					"scene": null
 				}
 			]

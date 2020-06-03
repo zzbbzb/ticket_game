@@ -11,7 +11,7 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     ticketList: [],
-    selectedTicketList: []
+    selectedTicketIndexList: []
   },
 
   onLoad: function () {
@@ -100,7 +100,7 @@ Page({
   checkboxChange: function(e){
     console.log('checkbox发生change事件，携带value值为：', e.detail)
     this.setData({
-      selectedTicketList: e.detail.value
+      selectedTicketIndexList: e.detail.value
     })
   },
 
@@ -207,17 +207,27 @@ Page({
       // 来自页面内转发按钮
       console.log(res.target)
     }
-
-    return this.shareDetailOP()
+    return {
+      title: '自定义转发标题',
+      path: 'pages/receiveTicket/receiveTicket?givingTicketId=' + givingTicketId
+    } 
+    // return this.shareDetailOP()
   },
 
   async shareDetailOP(){
 
-    if(this.data.selectedTicketList.length != 0)
+    let givingTicketId = "";
+    if(this.data.selectedTicketIndexList.length != 0)
     {
       let curTimeStamp = new Date().getTime();
       // 券id
-      let givingTicketId = app.globalData.openId + curTimeStamp;
+      givingTicketId = app.globalData.openId + curTimeStamp;
+      let selectedTicketList = []
+      for(let i = 0; i < this.data.selectedTicketIndexList.length; i++)
+      {
+        selectedTicketList.push(this.data.ticketList[this.data.selectedTicketIndexList[i]])
+      }
+      console.log("selectedTicketList=", selectedTicketList);
       await await wx.cloud.callFunction({
         name: "addData",
         data: {
@@ -225,10 +235,9 @@ Page({
           "dataJsonSet": {
             "giving_ticket_id": givingTicketId,
             "giving_openid": app.globalData.openId,
-            "giving_tickets_id_list": this.data.selectedTicketList,
+            "giving_tickets_lists": selectedTicketList,
             "create_time": curTimeStamp
-          },
-          "delBeforeAdd": true
+          }
         }
       }).then(res => {
         console.log(res)
