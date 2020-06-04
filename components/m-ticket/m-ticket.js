@@ -12,7 +12,10 @@ Component({
    * 组件的属性列表
    */
   properties: {
-    dataJsonSet: Object
+    dataJsonSet: {  
+        type: Object,
+        value: {}
+      }
   },
 
   attached: function(){
@@ -26,6 +29,8 @@ Component({
       let date_time_hour = "00"
       let date_time_min = "00"
       let data_time_sec = "00"
+      console.log("this.data.dataJsonSet=", this.data.dataJsonSet)
+
       if( this.data.dataJsonSet.ticket_type === 1){
         if(this.data.dataJsonSet.use_time_type === '天'){
           date_day = this.data.dataJsonSet.use_time

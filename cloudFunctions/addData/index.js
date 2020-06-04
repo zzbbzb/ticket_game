@@ -12,6 +12,8 @@ exports.main = async(event, context) => {
   let dataBaseName = event.dataBaseName
   let dataJsonSet = event.dataJsonSet
   let delBeforeAdd = false
+  let addIfNotExist = false
+
   if ("delBeforeAdd" in event)
   {
     delBeforeAdd = event.delBeforeAdd
@@ -26,6 +28,7 @@ exports.main = async(event, context) => {
   const { OPENID } = cloud.getWXContext()
   const db_database = db.collection(dataBaseName)
 
+  let t = {}
   if(delBeforeAdd)
   {
     // 删除数据
@@ -34,21 +37,24 @@ exports.main = async(event, context) => {
     }).remove();
 
   }
-
   // 添加数据
-  if (waitFlag) {
-    return await db_database.add({
-      data:{
-        "_openid": OPENID,
-        "dataJsonSet": dataJsonSet
-      }
-    })
-  } else {
-    return db_database.add({
-      data: {
-        "_openid": OPENID,
-        "dataJsonSet": dataJsonSet
-      }
-    })
+  if(addIfNotExist && "result" in t && t.result.length > 0 || !addIfNotExist)
+  {
+    if (waitFlag) {
+      return await db_database.add({
+        data:{
+          "_openid": OPENID,
+          "dataJsonSet": dataJsonSet
+        }
+      })
+    } else {
+      return db_database.add({
+        data: {
+          "_openid": OPENID,
+          "dataJsonSet": dataJsonSet
+        }
+      })
+    }
   }
+ 
 }

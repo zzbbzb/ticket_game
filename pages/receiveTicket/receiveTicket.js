@@ -10,6 +10,8 @@ Page({
    */
   data: {
     statusBarHeight: 0,
+    receiveState: 1,
+    givingTicketId: ""
   },
 
   /**
@@ -18,38 +20,137 @@ Page({
   onLoad: function (options) {
     console.log("receiveTicket onLoad=", options)
     let givingTicketId = options.givingTicketId;
-
+    let giving_openId = options.givingOpenId
     let selectedTicketList = options.selectedTicketList
-    selectedTicketList = selectedTicketList.trim()
-    console.log("options.selectedTicketList=",selectedTicketList)
-
+    let curTimeStamp = options.curTimeStamp
     let givingTicketList = JSON.parse(selectedTicketList);
+
     console.log("givingTicketList=", givingTicketList)
 
     // 获得逻辑
     let systemInfo = wx.getSystemInfoSync()
     let pxToRpxScale = 750 / systemInfo.windowWidth;
     console.log(systemInfo.statusBarHeight)
+    
     this.setData({
-      statusBarHeight: systemInfo.statusBarHeight * pxToRpxScale
+      statusBarHeight: systemInfo.statusBarHeight * pxToRpxScale,
+      ticketList: givingTicketList,
+      givingTicketId: givingTicketId
     })
-    this.getSelectedTickets(givingTicketId);
+
+    console.log("this.data.ticketList=", this.data.ticketList)
+
+    // 检测是否存在这个givingTicketId
+    let ticketOptions = {
+      givingTicketId: givingTicketId,
+      givingTicketList: givingTicketList,
+      curTimeStamp: curTimeStamp,
+      givingOpenId: giving_openId
+    }
+    this.hadSelectedTickets(givingTicketId, ticketOptions);
+
   },
 
-  async getSelectedTickets(givingTicketId){
+  async addGivingTicketInfo(options){
+    await wx.cloud.callFunction({
+      name: "addData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.GIVING_TICKET,
+        "dataJsonSet": {
+          "giving_ticket_id":options.givingTicketId,
+          "giving_openId": options.givingOpenId,
+          "giving_tickets_lists": options.givingTicketList,
+          "create_time": options.curTimeStamp,
+          "receive_openId":app.globalData.openId,
+          "receive_state": 0,
+        }
+      }
+    }).then(res => {
+      console.log("addGivingTicketInfo=", res)
+      const hasRes = res.result.data
+      console.log("addGivingTicketInfo=", hasRes)
+    })
+  },
+
+  async hadSelectedTickets(givingTicketId, options){
     console.log("givingTicketId=", givingTicketId)
     await wx.cloud.callFunction({
       name: "queryData",
       data: {
         "dataBaseName": config.DATA_BASE_NAME.GIVING_TICKET,
         "whereObject": {
-          "dataJsonSet.giving_ticket_id": givingTicketId
+          "dataJsonSet.giving_ticket_id": givingTicketId,
+          "_openid": app.globalData.openId
         },
       }
     }).then(res => {
-      console.log("getTickets=", res)
-      const findList = res.result.data
-      console.log("getTickets=", findList)
+      console.log("hadSelectedTickets=", res)
+      const hasRes = res.result.data
+      console.log("hadSelectedTickets=", hasRes)
+      if(hasRes.length === 0){
+        // 不存在,保存数据
+        this.addGivingTicketInfo(options)
+        this.setData({
+          receiveState: 0
+        })
+      }else{
+        this.setData({
+          receiveState: hasRes[0].dataJsonSet.receive_state
+        })
+      }
+    })
+  },
+
+  receiveTickets: function(){
+    this.receiveTicketsDetail();
+  },
+
+  async receiveTicketsDetail(){
+    
+    this.setData({
+      receiveState: 1
+    })
+    // 设置当前GivingTicket中状态可领取
+    await this.updateGivingTicket();
+    // 把所有券保存入当前用户
+    for(let i = 0; i < this.data.ticketList.length; i++)
+    {
+      (async()=>{
+        await this.addTicket(this.data.ticketList[i]);
+      })();
+    } 
+  },
+
+  async updateGivingTicket(){
+    this.data.givingTicketId
+    await wx.cloud.callFunction({
+      name: "updateData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.GIVING_TICKET,
+        "whereObject": {
+          'dataJsonSet.giving_ticket_id': this.data.givingTicketId
+        },
+        "updateData": {
+          "dataJsonSet.receive_state": 1
+        }
+      }
+    }).then((res)=>{
+      console.log(res)
+    })
+    
+  },
+
+  async addTicket(dataJsonSet){
+
+    await wx.cloud.callFunction({
+      name: "addData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.TICKET,
+        "dataJsonSet": dataJsonSet.dataJsonSet,
+        "waitFlag": true
+      }
+    }).then(res => {
+      console.log("成功保存,", res)
     })
   },
 

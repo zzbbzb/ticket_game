@@ -1,11 +1,12 @@
 <!--pages/receiveTicket/receiveTicket.wxml-->
-<block wx:if="{{ticketList}}" wx:key="index">
-  <m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}">
-						<!-- <view class="ticket_slot" slot="ticket_slot">
-							<checkbox value="{{item.dataJsonSet.ticket_id}}" checked="{{item.checked}}" />
-						</view> -->
-	</m-ticket>
-</block>
+<view class="ticketContainer">
+	<block wx:for="{{ticketList}}" wx:key="index">
+		<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}">
+		</m-ticket>
+	</block>
+</view>
 
 
-<button type="primary" class="getTicket" style="height:{{statusBarHeight}}px">一键领取</button>
+<button type="primary" class="getTicket" style="height:{{statusBarHeight}}px" 
+				disabled="{{receiveState === 1? true : false}}" bindtap="receiveTickets">
+				{{receiveState === 1? '已经领取': '一键领取'}}</button>

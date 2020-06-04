@@ -217,12 +217,6 @@ Page({
         selectedTicketList.push(this.data.ticketList[this.data.selectedTicketIndexList[i]])
       }
 
-      this.addGivingTicketInfo({
-        givingTicketId: givingTicketId,
-        selectedTicketList: selectedTicketList,
-        curTimeStamp: curTimeStamp
-      })
-
     }
     console.log("givingTicketId=", givingTicketId)
     console.log("curTimeStamp=", curTimeStamp)
@@ -230,26 +224,9 @@ Page({
 
     return {
       title: '自定义转发标题',
-      path: '/pages/receiveTicket/receiveTicket?givingTicketId=' + givingTicketId + "&curTimeStamp=" + curTimeStamp + "&selectedTicketList=" + JSON.stringify(selectedTicketList)
-    ,  success: function(res) {
-      console.log("111 =", res)
-      }
-      } 
-  },
+      path: '/pages/receiveTicket/receiveTicket?givingOpenId='+ app.globalData.openId + "&givingTicketId=" + givingTicketId + "&curTimeStamp=" + curTimeStamp + "&selectedTicketList=" + JSON.stringify(selectedTicketList)
 
-  async addGivingTicketInfo(options){
-    await wx.cloud.callFunction({
-      name: "addData",
-      data: {
-        "dataBaseName": config.DATA_BASE_NAME.GIVING_TICKET,
-        "dataJsonSet": {
-          "giving_ticket_id":options.givingTicketId,
-          "giving_openid": app.globalData.openId,
-          "giving_tickets_lists": options.selectedTicketList,
-          "create_time": options.curTimeStamp
-        }
-      }
-    })
+      } 
   }
 
 })
