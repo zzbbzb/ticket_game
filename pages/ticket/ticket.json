@@ -1,5 +1,7 @@
 {
   "component": true,
   "usingComponents": {
+    "m-ticket": "/components/m-ticket/m-ticket",
+    "mp-tabs": "/weui-miniprogram/tabs/tabs"
   }
 }

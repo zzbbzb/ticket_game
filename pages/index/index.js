@@ -19,16 +19,17 @@ Page({
     if (app.globalData.userInfo) {
       console.log("onLoad app.globalData.userInfo")
       this.updataUserInfoAndGetOtherInfo()
-    } else {
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      console.log("app.userInfoReadyCallback")
-      console.log("app", app.globalData.userInfo)
+    } 
+    // else {
+    //   // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+    //   // 所以此处加入 callback 以防止这种情况
+    //   console.log("app.userInfoReadyCallback")
+    //   console.log("app", app.globalData.userInfo)
 
-      app.userInfoReadyCallback = res => {
-        this.updataUserInfoAndGetOtherInfo()
-      }
-    }
+    //   app.userInfoReadyCallback = res => {
+    //     this.updataUserInfoAndGetOtherInfo()
+    //   }
+    // }
     console.log("index onlauch")
     // 隐藏右上角分享
     // wx.hideShareMenu()
@@ -51,7 +52,7 @@ Page({
             for(let i = 0; i < snapshot.docChanges.length; i++)
             {
               console.log('app snapshot onShow', snapshot.docChanges[i].dataType)
-              if(snapshot.docChanges[i].dataType !== 'init'){
+              if(snapshot.docChanges[i].dataType === 'add'){
                 let tmpList = this.data.ticketList;
                 console.log('app snapshot docs', snapshot.docChanges[i].doc)
 
@@ -60,6 +61,22 @@ Page({
                   ticketList: tmpList
                 })
                 console.log("this.data.ticketList=", this.data.ticketList)
+              }else if(snapshot.docChanges[i].dataType === 'remove')
+              {
+                let newList = this.data.ticketList
+                for(let i = 0; i < this.data.ticketList.length; i++)
+                {
+                  if(this.data.ticketList[i]._id === snapshot.docChanges[i].doc._id)
+                  {
+                    newList.splice(i,1);
+                    break;
+                  }
+                }
+
+                this.setData({
+                  ticketList: newList
+                })
+                
               }
             }
             

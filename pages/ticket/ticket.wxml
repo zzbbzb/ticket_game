@@ -1,9 +1,26 @@
 <!--pages/ticket/ticket.wxml-->
 <view class="container">
-  <!-- <view class="userinfo">
-    <button type="primary" wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-  </view> -->
-
-  
+	<mp-tabs tabs="{{tabs}}" activeTab="{{activeTab}}" swiperClass="weui-tabs-swiper" swiperStyle="height:{{swiperHeight}}px" bindtabclick="onTabCLick" bindchange="onChange" activeClass="tab-bar-title__selected">
+		<block wx:for="{{tabs}}" wx:key="title">
+			<view class="tab-content" slot="tab-content-{{index}}">
+				<block wx:if="{{index == 0}}">
+					<view class="ticket_content">
+						<block wx:for="{{ticketList}}" wx:key="index">
+							<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}">
+							</m-ticket>
+						</block>
+					</view>
+				</block>
+				
+				<block wx:elseif="{{index == 4}}">
+					<view class="ticket_content">
+						<block wx:for="{{ticketList}}" wx:key="index">
+							<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}">
+							</m-ticket>
+						</block>
+					</view>
+				</block>
+			</view>
+		</block>
+	</mp-tabs>
 </view>
-

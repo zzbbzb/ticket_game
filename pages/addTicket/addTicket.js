@@ -198,7 +198,7 @@ Page({
       this.setData({
         endDate: date
       })
-      date += " 11:59:59";
+      date += " 23:59:59";
     }
 
     

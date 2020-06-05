@@ -1,0 +1,19 @@
+/* pages/login/login.wxss */
+.container{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: yellow;
+}
+
+.location{
+  transform: translateY(-80%);
+}
+
+.infoDetail {
+  text-align:center;
+  margin-bottom: 100rpx;
+  font-size: 60rpx;
+  font-weight: bold;
+}

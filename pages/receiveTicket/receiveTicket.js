@@ -28,12 +28,17 @@ Page({
     console.log("givingTicketList=", givingTicketList)
 
     // 获得逻辑
-    let systemInfo = wx.getSystemInfoSync()
+    let systemInfo = wx.getSystemInfoSync();
+    let windowHeight = systemInfo.windowHeight;
     let pxToRpxScale = 750 / systemInfo.windowWidth;
-    console.log(systemInfo.statusBarHeight)
+    let statusBarHeight = systemInfo.statusBarHeight * pxToRpxScale
+
+    let ticketContainerHeight = windowHeight - statusBarHeight
+    console.log(ticketContainerHeight)
     
     this.setData({
-      statusBarHeight: systemInfo.statusBarHeight * pxToRpxScale,
+      ticketContainerHeight: ticketContainerHeight,
+      statusBarHeight: statusBarHeight,
       ticketList: givingTicketList,
       givingTicketId: givingTicketId
     })
@@ -90,13 +95,22 @@ Page({
       if(hasRes.length === 0){
         // 不存在,保存数据
         this.addGivingTicketInfo(options)
-        this.setData({
-          receiveState: 0
-        })
+        console.log("hadSelectedTickets app.globalData.openId=", app.globalData.openId)
+        console.log("hadSelectedTickets options.givingOpenId=", options.givingOpenId)
+        if(app.globalData.openId != options.givingOpenId){
+          this.setData({
+            receiveState: 0
+          })
+        }
+        
       }else{
-        this.setData({
-          receiveState: hasRes[0].dataJsonSet.receive_state
-        })
+        console.log("hadSelectedTickets app.globalData.openId=", app.globalData.openId)
+        console.log("hadSelectedTickets options.givingOpenId=", options.givingOpenId)
+        if(app.globalData.openId != options.givingOpenId){
+          this.setData({
+            receiveState: hasRes[0].dataJsonSet.receive_state
+          })
+        }
       }
     })
   },
@@ -141,6 +155,9 @@ Page({
   },
 
   async addTicket(dataJsonSet){
+    console.log("receiveTicket addTicket=", dataJsonSet.dataJsonSet.ticket_state)
+    dataJsonSet.dataJsonSet.ticket_state = 1
+    console.log("receiveTicket addTicket=", dataJsonSet.dataJsonSet.ticket_state)
 
     await wx.cloud.callFunction({
       name: "addData",

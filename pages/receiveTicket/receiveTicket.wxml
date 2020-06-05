@@ -1,5 +1,5 @@
 <!--pages/receiveTicket/receiveTicket.wxml-->
-<view class="ticketContainer">
+<view class="ticketContainer" style="height:{{ticketContainerHeight}}px">
 	<block wx:for="{{ticketList}}" wx:key="index">
 		<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}">
 		</m-ticket>

@@ -1,0 +1,14 @@
+<!--pages/login/login.wxml-->
+<mp-navigation-bar show="{{true}}" title="登录" back="{{false}}" 
+										background="#dddddd"></mp-navigation-bar>
+
+<view class="container">
+  <view class="location">
+  <view class="infoDetail"> 登录开始 </view>
+	<button type="primary" wx:if="{{!hasUserInfo}}" style="width: 60vw;"
+          open-type="getUserInfo" bindgetuserinfo="getUserInfo" 
+          class="loginBtn"> 
+          授权登录
+          </button>
+  </view>
+</view>

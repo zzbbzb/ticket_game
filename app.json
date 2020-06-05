@@ -1,8 +1,9 @@
 {
   "pages": [
+    "pages/login/login",
+    "pages/ticket/ticket",
     "pages/index/index",
     "pages/receiveTicket/receiveTicket",
-    "pages/ticket/ticket",
     "pages/addTicket/addTicket"
   ],
   "window": {

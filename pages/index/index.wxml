@@ -1,8 +1,7 @@
 <!--index.wxml-->
 <view class="container">
-	<button type="primary" wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
 
-	<block wx:else>
+	<block wx:if="{{hasUserInfo}}">
 		<view class="ticketContainer">
 
 			<label class="weui-cell weui-check__label" wx:for="{{items}}" wx:key="{{item.value}}">
