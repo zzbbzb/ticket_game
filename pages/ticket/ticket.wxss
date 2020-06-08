@@ -28,3 +28,19 @@
   flex-direction: column;
   width: 100%;
 }
+
+.ticket_slot {
+  width:25vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20rpx;
+  margin-left: 20rpx;
+}
+
+.btn {
+  height: 70rpx;
+  font-size: 40rpx;
+  line-height: 65rpx;
+  font-size: 35rpx;
+}

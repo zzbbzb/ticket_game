@@ -7,12 +7,15 @@
 					<view class="ticket_content">
 						<block wx:for="{{ticketList}}" wx:key="index">
 							<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}">
+								<view class="ticket_slot" slot="ticket_slot"> 
+									<button class="btn" type="primary">使用</button>
+								</view>
 							</m-ticket>
 						</block>
 					</view>
 				</block>
 				
-				<block wx:elseif="{{index == 4}}">
+				<block wx:if="{{index == 4}}">
 					<view class="ticket_content">
 						<block wx:for="{{ticketList}}" wx:key="index">
 							<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}">
