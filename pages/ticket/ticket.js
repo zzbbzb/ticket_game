@@ -68,6 +68,11 @@ Page({
     this.getTickets(this.data.activeTab);
   },
 
+  /* 使用 */
+  tapUse: function(){
+    console.log("tapUse")
+  },
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
