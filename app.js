@@ -30,7 +30,7 @@ App({
     });
     console.log("getUserOpenId")
 
-
+    // 监听消息, 更新消息
 
     // 获取用户信息
     wx.getSetting({

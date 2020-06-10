@@ -4,7 +4,8 @@
     "pages/ticket/ticket",
     "pages/index/index",
     "pages/receiveTicket/receiveTicket",
-    "pages/addTicket/addTicket"
+    "pages/addTicket/addTicket",
+    "pages/message/message"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -26,6 +27,11 @@
         "text": "我的券",
         "iconPath": "asserts/images/tab_bar/ticket.png",
         "selectedIconPath": "asserts/images/tab_bar/ticket_activated.png"
+      },{
+        "pagePath": "pages/message/message",
+        "text": "消息",
+        "iconPath": "asserts/images/tab_bar/message.png",
+        "selectedIconPath": "asserts/images/tab_bar/message_activated.png"
       }
     ]
   }

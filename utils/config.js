@@ -2,7 +2,8 @@
 const DATA_BASE_NAME = {
   USER_INFO: "UserInfo",
   TICKET: "Ticket",
-  GIVING_TICKET: "GivingTicket"
+  GIVING_TICKET: "GivingTicket",
+  MESSAGE: "Message"
 };
 
 module.exports = {
