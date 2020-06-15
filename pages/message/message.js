@@ -1,4 +1,7 @@
 // pages/message/message.js
+const app = getApp()
+const config = require("../../utils/config.js");
+
 Page({
 
   /**
@@ -12,6 +15,27 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    // 修改数据库
+    wx.cloud.callFunction({
+      name: "updateData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.MESSAGE,
+        "whereObject": {
+          "_openid": app.globalData.openId,
+          "dataJsonSet.ticket_state": 1,
+          "dataJsonSet.ticket_id": useTicketId
+        },
+        "updateData":{
+          "dataJsonSet.ticket_state": 2
+        }
+      }
+    }).then(res => {
+      console.log("getTickets=", res);
+      const findList = res.result.data
+      console.log("getTickets=", findList);
+    })
+
+    app.globalData.messageNum = 0;
 
   },
 
