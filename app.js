@@ -109,6 +109,11 @@ App({
         index: 2,
         text: num.toString()
       })
+    }else{
+      wx.removeTabBarBadge({
+        index: 2,
+        text: ''
+      })
     }
   },
 

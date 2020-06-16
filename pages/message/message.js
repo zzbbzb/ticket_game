@@ -21,23 +21,46 @@ Page({
       data: {
         "dataBaseName": config.DATA_BASE_NAME.MESSAGE,
         "whereObject": {
-          "_openid": app.globalData.openId,
-          "dataJsonSet.ticket_state": 1,
-          "dataJsonSet.ticket_id": useTicketId
+          "dataJsonSet.receipt_openId": app.globalData.openId,
+          "dataJsonSet.new_type": 0
         },
         "updateData":{
-          "dataJsonSet.ticket_state": 2
+          "dataJsonSet.new_type": 1
         }
       }
     }).then(res => {
-      console.log("getTickets=", res);
+      console.log("message onLoad=", res);
       const findList = res.result.data
-      console.log("getTickets=", findList);
+      console.log("message onLoad=", findList);
     })
 
-    app.globalData.messageNum = 0;
+    if(app.globalData.messageNum != 0)
+    {
+      app.globalData.messageNum = 0;
+      app.UpdateListNum(0);
+    }
 
+    // 获得所有消息
+    this.getMessages()
   },
+
+  async getMessages(){
+
+    await wx.cloud.callFunction({
+      name: "queryData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.MESSAGE,
+        "whereObject": {
+          "dataJsonSet.receipt_openId": app.globalData.openId
+        },
+      }
+    }).then(res => {
+      console.log("message getMessages=", res);
+      const findList = res.result.data
+      console.log("message getMessages=", findList);
+    })
+  },
+  
 
   /**
    * 生命周期函数--监听页面初次渲染完成
