@@ -25,11 +25,54 @@ App({
     }).then(res => {
       console.log("成功", res.result.openid);
       this.globalData.openId = res.result.openid
+          
+      // 监听消息, 更新消息
+      const db = wx.cloud.database()
+      let watcher = db.collection("Message")
+      .where({
+        // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
+        'dataJsonSet.receipt_openId': db.command.eq(this.globalData.openId),
+        'dataJsonSet.new_type': 0
+      })
+      // 发起监听
+      .watch({
+        onChange: (snapshot) => {
+          console.log('app snapshot onShow3333', snapshot)
+          if (snapshot.docChanges != undefined && snapshot.docChanges.length != 0) {
+            if(snapshot.docChanges[0].dataType === 'init')
+            {
+              this.globalData.messageNum = snapshot.docChanges.length
+              this.UpdateListNum(this.globalData.messageNum);
+            }
+            else{
+              let url = this.GetCurrentPageUrl() 
+              for(let i = 0; i < snapshot.docChanges.length; i++)
+              {
+                console.log('app snapshot onShow', snapshot.docChanges[i].dataType)
+                
+                if(snapshot.docChanges[i].dataType === 'add' && url !== "pages/message/message"){
+                  
+                  console.log('app snapshot docs', snapshot.docChanges[i].doc)
+                  this.globalData.messageNum = this.globalData.messageNum + 1
+                  this.UpdateListNum(this.globalData.messageNum);
+                }
+                else if(snapshot.docChanges[i].dataType === 'add' && url === "pages/message/message")
+                {
+                  // 刷新页面
+                  this.GetCurrentPage().onShow();
+                }
+              }
+            }
+          }
+        },
+        onError: (err) => {
+          console.error('the watch closed because of error', err)
+        }
+      })
     }).catch(res => {
       console.log("失败", res);
     });
     console.log("getUserOpenId")
-
 
 
     // 获取用户信息
@@ -58,6 +101,22 @@ App({
     })
   },
 
+  UpdateListNum: function(num)
+  { 
+    if (num != 0)
+    {
+      wx.setTabBarBadge({
+        index: 2,
+        text: num.toString()
+      })
+    }else{
+      wx.removeTabBarBadge({
+        index: 2,
+        text: ''
+      })
+    }
+  },
+
   GetCurrentPage: function()
   {
     let pages = getCurrentPages() //获取加载的页面
@@ -76,6 +135,7 @@ App({
   globalData: {
     userInfo: null,
     hasUserInfo: false,
-    openId: ""
+    openId: "",
+    messageNum: 0
   }
 })

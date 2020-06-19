@@ -23,11 +23,11 @@
 			"disablePlugins": [],
 			"outputPath": ""
 		},
-		"useCompilerModule": false,
+		"useCompilerModule": true,
 		"userConfirmedUseCompilerModuleSwitch": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.11.1",
+	"libVersion": "2.11.0",
 	"appid": "wx8a4a57a2ba7d31a4",
 	"projectname": "ticket_game",
 	"debugOptions": {
