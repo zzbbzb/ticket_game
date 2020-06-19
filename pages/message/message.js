@@ -8,7 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    messages: []
   },
 
   /**
@@ -58,6 +58,9 @@ Page({
       console.log("message getMessages=", res);
       const findList = res.result.data
       console.log("message getMessages=", findList);
+      this.setData({
+        messages: findList
+      })
     })
   },
   

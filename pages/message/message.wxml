@@ -1,2 +1,14 @@
 <!--pages/message/message.wxml-->
-<text>pages/message/message.wxml</text>
+
+<view class="container">
+  <block wx:for="{{messages}}" wx:key="index">
+    <view>
+      <view class="info">{{item.dataJsonSet.send_user_name}}</view>
+      <view class="btn">
+
+      </view>
+    </view>
+  </block>
+
+</view>
+
