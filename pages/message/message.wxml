@@ -1,14 +1,14 @@
 <!--pages/message/message.wxml-->
 
 <view class="container">
-  <block wx:for="{{messages}}" wx:key="index">
-    <view>
-      <view class="info">{{item.dataJsonSet.send_user_name}}</view>
-      <view class="btn">
-
-      </view>
-    </view>
-  </block>
+	<block wx:for="{{messages}}" wx:key="index">
+		<view>
+			<view class="info">{{item.dataJsonSet.send_user_name}}</view>
+			<view class="btns">
+				<button data-index="{{index}}" class="btn" type="primary" bindtap="tapUse">拒绝</button>
+				<button data-index="{{index}}" class="btn" type="primary" bindtap="tapUse">同意</button>
+			</view>
+		</view>
+	</block>
 
 </view>
-

@@ -1,1 +1,13 @@
 /* pages/message/message.wxss */
+.btns{
+  display: flex;
+  flex-direction: row;
+  
+}
+
+.btn {
+  height: 70rpx;
+  font-size: 40rpx;
+  line-height: 65rpx;
+  font-size: 35rpx;
+}
