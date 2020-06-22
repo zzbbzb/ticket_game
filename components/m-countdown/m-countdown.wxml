@@ -1,0 +1,11 @@
+<!--components/m-countdown/m-countdown.wxml-->
+<view class="dataTime">
+	<view class="data_day">{{date_day}}天</view>
+	<view>{{date_time}} </view>
+	<block wx:if="{{isShow && isPause}}">
+		<image mode="widthFix" class="btn pauseBtn" src="/asserts/images/btns/pause.png" bindtap="tapPlay"></image>
+	</block>
+	<block wx:elif="{{isShow && !isPause}}">
+		<image mode="widthFix" class="btn pauseBtn" src="/asserts/images/btns/playing.png" bindtap="tapPause"></image>
+	</block>
+</view>

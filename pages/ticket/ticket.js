@@ -8,10 +8,10 @@ Page({
    * 页面的初始数据
    */
   data: {
-    tab_title: ["拥有的", "使用中", "已使用", "已过期"],
+    tab_title: ["拥有的", "使用中", "已使用", "已完成", "已过期"],
     tabs: [],
     activeTab: 0,
-    ticketList: [[],[],[],[]]
+    ticketList: [[],[],[],[],[]]
   },
 
   /**
@@ -102,7 +102,7 @@ Page({
     let curTimeStamp = new Date().getTime();
     // 券id
     let msgId = app.globalData.openId + curTimeStamp;
-    let msgInfo = ""
+    let msgInfo = app.globalData.userInfo.nickName + "要使用你送的" + this.data.ticketList[0][index].dataJsonSet.ticket_name 
 
     console.log("this.data.ticketList[0]=", this.data.ticketList[0]);
     
@@ -166,6 +166,12 @@ Page({
           console.log("getTickets=", findList);
         })
       })
+  },
+
+  triggerCountDownFinish: function(e)
+  {
+    console.log("ticket triggerCountDownFinish e=", e);
+    // 记录到数据库设置ticket 类型已经完成
   },
 
   /**

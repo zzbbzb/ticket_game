@@ -114,11 +114,3 @@ page {
   flex-direction: row;
   width: 100%;
 }
-.dataTime{
-  display: flex;
-  flex-direction: row;
-}
-.data_day {
-  font-size: 20rpx;
-  margin-right: 10rpx;
-}

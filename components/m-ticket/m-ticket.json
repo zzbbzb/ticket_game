@@ -1,4 +1,6 @@
 {
   "component": true,
-  "usingComponents": {}
+  "usingComponents": {
+    "m-countdown": "/components/m-countdown/m-countdown"
+  }
 }

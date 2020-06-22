@@ -1,0 +1,19 @@
+/* components/m-countdown/m-countdown.wxss */
+.dataTime{
+  display: flex;
+  flex-direction: row;
+}
+
+.data_day {
+  font-size: 20rpx;
+  margin-right: 10rpx;
+}
+
+.btn {
+  width: 60rpx;
+  height:60rpx;
+}
+
+.pauseBtn {
+  margin-left: 20rpx;
+}

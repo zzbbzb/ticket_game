@@ -17,10 +17,10 @@
 					<view class="ticket_use_count_unit">次</view>
 				</block>
 				<block wx:else>
-					<view class="dataTime">
-						<view class="data_day">{{date_day}}天</view>
-						<view>{{date_time}} </view>
-					</view>
+					<m-countdown date_day="{{date_day}}" date_time="{{date_time}}" 
+											 isPause="{{isPause}}" isShow="{{isShow}}"
+										   hour="{{hour}}" minute="{{minute}}" second="{{second}}" 
+											 bind:isCountDownFinsh="triggerCountDownFinsh"/>
 				</block>
 			</view>
 

@@ -6,7 +6,7 @@
 				<block wx:if="{{index == 0}}">
 					<view class="ticket_content">
 						<block wx:for="{{ticketList[activeTab]}}" wx:key="index">
-							<m-ticket dataJsonSet="{{ticketList[activeTab][index].dataJsonSet}}">
+							<m-ticket dataJsonSet="{{ticketList[activeTab][index].dataJsonSet}}" bind:isCountDownFinsh="triggerCountDownFinish">
 								<view class="ticket_slot" slot="ticket_slot"> 
 									<button data-index="{{index}}" class="btn" type="primary" bindtap="tapUse">使用</button>
 								</view>

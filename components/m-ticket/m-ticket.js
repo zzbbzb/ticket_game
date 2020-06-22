@@ -13,9 +13,13 @@ Component({
    */
   properties: {
     dataJsonSet: {  
-        type: Object,
-        value: {}
-      }
+      type: Object,
+      value: {}
+    },
+    isShow: {
+      type: Boolean,
+      value: true
+    }
   },
 
   attached: function(){
@@ -55,7 +59,10 @@ Component({
         'start_use_time': util.formatTime(this.data.dataJsonSet.start_use_time),
         'end_use_time': util.formatTime(this.data.dataJsonSet.end_use_time),
         'date_day': date_day,
-        'date_time': date_time_hour + ':' + date_time_min + ':' + data_time_sec
+        'date_time': date_time_hour + ':' + date_time_min + ':' + data_time_sec,
+        'hour': parseInt(date_time_hour),
+        'minute': parseInt(date_time_min),
+        'second': parseInt(data_time_sec)
       })    
     }
   },
@@ -64,13 +71,22 @@ Component({
      * 组件的初始数据
      */
     data: {
-      date_day: 0
+      date_day: 0,
+      isPause: true,
+      hour: 0,
+      minute: 0,
+      second: 0
     },
 
     /**
      * 组件的方法列表
      */
     methods: {
+      triggerCountDownFinsh: function(e)
+      {
+        console.log("triggerCountDownFinsh e=", e)
 
+        this.triggerEvent('isCountDownFinsh',{isFinshed: e.detail.isFinshed}, {})
+      }
     }
   })
