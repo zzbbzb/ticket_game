@@ -27,7 +27,7 @@ exports.main = async (event, context) => {
             "dataJsonSet.ticket_id": findList[i].dataJsonSet.ticket_id
           }).update({
             data:{
-              "dataJsonSet.ticket_state": 5
+              "dataJsonSet.ticket_state": 4
             }
           })
         })()

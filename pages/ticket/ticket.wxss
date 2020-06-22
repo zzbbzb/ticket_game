@@ -44,3 +44,7 @@
   line-height: 65rpx;
   font-size: 35rpx;
 }
+
+.t {
+  font-size: 30rpx;
+}

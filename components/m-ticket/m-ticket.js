@@ -18,7 +18,7 @@ Component({
     },
     isShow: {
       type: Boolean,
-      value: true
+      value: false
     }
   },
 
