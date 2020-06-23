@@ -28,7 +28,7 @@ App({
           
       // 监听消息, 更新消息
       const db = wx.cloud.database()
-      let watcher = db.collection("Message")
+      db.collection("Message")
       .where({
         // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
         'dataJsonSet.receipt_openId': db.command.eq(this.globalData.openId),
@@ -69,6 +69,61 @@ App({
           console.error('the watch closed because of error', err)
         }
       })
+
+      db.collection("Message")
+      .where({
+        // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
+        'dataJsonSet.send_openId': db.command.eq(this.globalData.openId),
+        'dataJsonSet.msg_receipt': 0
+      })
+      // 发起监听
+      .watch({
+        onChange: (snapshot) => {
+          console.log('app snapshot openWatcherReceiptMessage', snapshot)
+          if (snapshot.docChanges != undefined && snapshot.docChanges.length != 0) {
+            if(snapshot.docChanges[0].dataType !== 'init')
+            {
+              for(let i = 0; i < snapshot.docChanges.length; i++)
+              {
+                if(snapshot.docChanges[i].dataType === 'update'){
+                  console.log('app snapshot docs', snapshot.docChanges[i].doc)
+                        
+                }
+              }
+            }
+           
+            //   {
+            // if(snapshot.docChanges[0].dataType === 'init')
+            // {
+            //   this.globalData.messageNum = snapshot.docChanges.length
+            //   this.UpdateListNum(this.globalData.messageNum);
+            // }
+            // else{
+            //   let url = this.GetCurrentPageUrl() 
+            //   for(let i = 0; i < snapshot.docChanges.length; i++)
+            //   {
+            //     console.log('app snapshot onShow', snapshot.docChanges[i].dataType)
+                
+            //     if(snapshot.docChanges[i].dataType === 'add' && url !== "pages/message/message"){
+                  
+            //       console.log('app snapshot docs', snapshot.docChanges[i].doc)
+            //       this.globalData.messageNum = this.globalData.messageNum + 1
+            //       this.UpdateListNum(this.globalData.messageNum);
+            //     }
+            //     else if(snapshot.docChanges[i].dataType === 'add' && url === "pages/message/message")
+            //     {
+            //       // 刷新页面
+            //       this.GetCurrentPage().onShow();
+            //     }
+            //   }
+            // }
+          }
+        },
+        onError: (err) => {
+          console.error('the watch closed because of error', err)
+        }
+      })
+      
     }).catch(res => {
       console.log("失败", res);
     });

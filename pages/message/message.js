@@ -8,7 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    messages: []
+    messages: [],
   },
 
   /**
@@ -64,14 +64,85 @@ Page({
     })
   },
 
-  tapCancel: function()
+  tapCancel: function(e)
   {
+    // 把消息里显示同意印章
+    let index = e.currentTarget.dataset.index
+    console.log(index)
+    console.log(this.data.messages)
+    let message = "messages[" + index + "].dataJsonSet.msg_receipt"
+    // 把消息里显示同意印章
+    this.setData({
+      [message] : 2
+    })
 
+    // 设置message中 msg_receipt
+    this.updateMessageReceipt(2, index)
+    // 设置ticket中 ticket_state
+    this.updateTicketReceipt(11, index) 
   },
 
-  tapAgree: function()
+  tapAgree: function(e)
   {
+    // 把消息里显示同意印章
+    let index = e.currentTarget.dataset.index
+    console.log(index)
+    console.log(this.data.messages)
+    let message = "messages[" + index + "].dataJsonSet.msg_receipt"
+    // 把消息里显示同意印章
+    this.setData({
+      [message] : 1
+    })
+    console.log(this.data.messages)
+    // 设置message中 msg_receipt
+    this.updateMessageReceipt(1, index)
+    // 设置ticket中 ticket_state
+    this.updateTicketReceipt(21, index)
+  },
 
+  updateMessageReceipt: function(msg_receipt, index)
+  {
+    // 更新msg_receipt
+    wx.cloud.callFunction({
+      name: "updateData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.MESSAGE,
+        "whereObject": {
+          "dataJsonSet.receipt_openId": app.globalData.openId,
+          "dataJsonSet.msg_receipt": 0,
+          "dataJsonSet.ticket_id": this.data.messages[index].dataJsonSet.ticket_id
+        },
+        "updateData":{
+          "dataJsonSet.msg_receipt": msg_receipt
+        }
+      }
+    }).then(res => {
+      console.log("getTickets=", res);
+      const findList = res.result.data
+      console.log("getTickets=", findList);
+    })
+  },
+
+  updateTicketReceipt: function(ticket_state, index)
+  {
+        // 更新券的 state
+    wx.cloud.callFunction({
+      name: "updateData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.TICKET,
+        "whereObject": {
+          "dataJsonSet.ticket_state": 2,
+          "dataJsonSet.ticket_id": this.data.messages[index].dataJsonSet.ticket_id
+        },
+        "updateData":{
+          "dataJsonSet.ticket_state": ticket_state
+        }
+      }
+    }).then(res => {
+      console.log("getTickets=", res);
+      const findList = res.result.data
+      console.log("getTickets=", findList);
+    })
   },
 
   /**

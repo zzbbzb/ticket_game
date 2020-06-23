@@ -25,4 +25,15 @@ text {
 .message {
   border:6rpx solid black;
   margin:10rpx 40rpx 10rpx 40rpx;
+  height: 15vh;
+  position: relative;
+}
+
+.stamp {
+  width: 250rpx;
+  height: 250rpx;
+  position: absolute;
+  right:-8rpx;
+  top: -6vh;
+  clip:rect(6vh 242rpx 21vh 0rpx);
 }

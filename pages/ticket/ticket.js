@@ -124,12 +124,14 @@ Page({
             "send_user_name": app.globalData.userInfo.nickName,
             "receipt_openId": this.data.ticketList[0][index].dataJsonSet.giving_openid,
             "receipt_user_name": this.data.ticketList[0][index].dataJsonSet.giving_name,
-            "new_type": 0
+            "new_type": 0,
+            "ticket_id": this.data.ticketList[0][index].dataJsonSet.ticket_id
           },
         }
       }).then(res => {
         console.log("tttt=", res);
-              // 点击使用
+        
+        // 点击使用
         let hasTicketList = this.data.ticketList[0]
         let usingTicketList = this.data.ticketList[1]
         

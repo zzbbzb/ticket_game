@@ -3,12 +3,20 @@
 <view class="container">
 	<block wx:for="{{messages}}" wx:key="index">
 		<view class="message">
+			<block wx:if="{{item.dataJsonSet.msg_receipt !== 0}}">
+				<block wx:if="{{item.dataJsonSet.msg_receipt === 1}}">
+					<image class="stamp" mode="widthFit" src="/asserts/images/message/agree.png"></image>
+				</block>
+				<block wx:else>
+					<image class="stamp" mode="widthFit" src="/asserts/images/message/refuse.png"></image>
+				</block>
+			</block>
 			<view class="info">
 				<text>{{item.dataJsonSet.msg_info}}</text>
 			</view>
-			<view class="btns">
-				<button class="btn" type="primary" bindtap="tapCancel">拒绝</button>
-				<button class="btn" type="primary" bindtap="tapAgree">同意</button>
+			<view class="btns" wx:if="{{item.dataJsonSet.msg_receipt === 0}}">
+				<button class="btn" data-index="{{index}}" type="primary" bindtap="tapCancel">拒绝</button>
+				<button class="btn" data-index="{{index}}" type="primary" bindtap="tapAgree">同意</button>
 			</view>
 		</view>
 	</block>
