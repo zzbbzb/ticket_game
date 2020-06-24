@@ -18,16 +18,31 @@
 				<block wx:if="{{index == 1}}">
 					<view class="ticket_content">
 						<block wx:for="{{ticketList[activeTab]}}" wx:key="index">
-							<m-ticket dataJsonSet="{{ticketList[activeTab][index].dataJsonSet}}" isShow="{{false}}">
+							<m-ticket dataJsonSet="{{ticketList[activeTab][index].dataJsonSet}}" 
+												isShow="{{ticketList[activeTab][index].dataJsonSet.ticket_use_state === 1 && ticketList[activeTab][index].dataJsonSet.ticket_type === 1}}">
 								<view class="ticket_slot" slot="ticket_slot"> 
-									<button data-index="{{index}}" class="btn t" type="primary" bindtap="tapUse">确认使用</button>
+									<block wx:if="{{ticketList[activeTab][index].dataJsonSet.ticket_use_state === 1}}">
+										<button data-index="{{index}}" class="btn" type="primary" bindtap="tapFinish">完成</button>
+									</block>
+									<block wx:else>
+										<button data-index="{{index}}" class="btn t" type="primary">确认使用</button>
+									</block>
 								</view>
 							</m-ticket>
 						</block>
 					</view>
 				</block>
+
+				<block wx:if="{{index == 2}}">
+					<view class="ticket_content">
+						<block wx:for="{{ticketList[activeTab]}}" wx:key="index">
+							<m-ticket dataJsonSet="{{ticketList[activeTab][index].dataJsonSet}}" isFinish="{{ticketList[activeTab][index].dataJsonSet.ticket_use_state === 1}}">
+							</m-ticket>
+						</block>
+					</view>
+				</block>
 				
-				<block wx:if="{{index == 4}}">
+				<block wx:if="{{index == 3}}">
 					<view class="ticket_content">
 						<block wx:for="{{ticketList[activeTab]}}" wx:key="index">
 							<m-ticket dataJsonSet="{{ticketList[activeTab][index].dataJsonSet}}">

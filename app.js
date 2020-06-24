@@ -31,7 +31,7 @@ App({
       db.collection("Message")
       .where({
         // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
-        'dataJsonSet.receipt_openId': db.command.eq(this.globalData.openId),
+        'dataJsonSet.receipt_openId': this.globalData.openId,
         'dataJsonSet.new_type': 0
       })
       // 发起监听
@@ -59,7 +59,7 @@ App({
                 else if(snapshot.docChanges[i].dataType === 'add' && url === "pages/message/message")
                 {
                   // 刷新页面
-                  this.GetCurrentPage().onShow();
+                  this.GetCurrentPage().updateMessage(snapshot.docChanges[i].doc);
                 }
               }
             }
@@ -73,8 +73,9 @@ App({
       db.collection("Message")
       .where({
         // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
-        'dataJsonSet.send_openId': db.command.eq(this.globalData.openId),
-        'dataJsonSet.msg_receipt': 0
+        'dataJsonSet.send_openId': this.globalData.openId,
+        'dataJsonSet.msg_receipt': 0,
+        'dataJsonSet.new_type': 1
       })
       // 发起监听
       .watch({
@@ -83,11 +84,28 @@ App({
           if (snapshot.docChanges != undefined && snapshot.docChanges.length != 0) {
             if(snapshot.docChanges[0].dataType !== 'init')
             {
+              let url = this.GetCurrentPageUrl() 
+              let curPage = this.GetCurrentPage()
+              console.log("url=", url)
               for(let i = 0; i < snapshot.docChanges.length; i++)
               {
                 if(snapshot.docChanges[i].dataType === 'update'){
                   console.log('app snapshot docs', snapshot.docChanges[i].doc)
-                        
+                  // 更改券ticket_use_state
+                  let ticket_id = snapshot.docChanges[i].doc.dataJsonSet.ticket_id
+                  let msg_receipt = snapshot.docChanges[i].doc.dataJsonSet.msg_receipt
+                  
+                  if(url === "pages/ticket/ticket" && msg_receipt !== 0){
+                    // 在ticket 页面，手动改变page中tickets中的值  
+                    if(msg_receipt === 1)
+                    {
+                      curPage.hUpdateTicketUseState(ticket_id)
+                    }
+                    else if(msg_receipt === 2) // 取消
+                    {
+                      curPage.hUpdateTicketState(ticket_id)
+                    }
+                  }  
                 }
               }
             }

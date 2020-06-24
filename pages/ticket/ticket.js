@@ -11,7 +11,7 @@ Page({
     tab_title: ["拥有的", "使用中", "已完成", "已过期"],
     tabs: [],
     activeTab: 0,
-    ticketList: [[],[],[],[]]
+    ticketList: [{},{},{},{}]
   },
 
   /**
@@ -65,24 +65,32 @@ Page({
   },
 
   setTicketData: function(state, findList){
+
+    let t = {}
+    for(let i = 0; i < findList.length; i ++)
+    {
+      t[findList[i].dataJsonSet.ticket_id] = findList[i]
+    }
+
     if(state === 0){
       this.setData({
-        'ticketList[0]': findList
+        'ticketList[0]':  t
       })
     }
     else if(state === 1){
       this.setData({
-        'ticketList[1]': findList
+        'ticketList[1]':  t
       })
     } else if(state === 2){
       this.setData({
-        'ticketList[2]': findList
+        'ticketList[2]':  t
       })
     }else if(state === 3){
       this.setData({
-        'ticketList[3]': findList
+        'ticketList[3]':  t
       })
     }
+    console.log("this.ticketList=", this.data.ticketList)
   },
 
   onChange(e) {
@@ -136,12 +144,15 @@ Page({
         let usingTicketList = this.data.ticketList[1]
         
         let useTicketId = hasTicketList[index].dataJsonSet.ticket_id
-        usingTicketList.push(hasTicketList[index])
-        console.log("usingTicketList before=", usingTicketList[usingTicketList.length - 1]);
-        usingTicketList[usingTicketList.length - 1].dataJsonSet.ticket_state = 2
-        // console.log("usingTicketList after=", usingTicketList[usingTicketList.length - 1]);
         
-        hasTicketList.splice(index, 1)
+
+        usingTicketList[index] = hasTicketList[index]
+  
+        console.log("usingTicketList before=", usingTicketList[index]);
+        usingTicketList[index].dataJsonSet.ticket_state = 2
+        console.log("usingTicketList after=", usingTicketList[index]);
+        
+        delete hasTicketList[index]
         
         this.setData({
           'ticketList[0]': hasTicketList,
@@ -170,10 +181,84 @@ Page({
       })
   },
 
+  hUpdateTicketUseState: function(ticket_id){
+
+    // 点击使用
+    let usingTicketList = this.data.ticketList[1]
+    
+    console.log("hUpdateTicketUseState before=", usingTicketList[ticket_id]);
+    usingTicketList[ticket_id].dataJsonSet.ticket_use_state = 1
+    console.log("hUpdateTicketUseState after=", usingTicketList[ticket_id]);
+    // console.log("usingTicketList after=", usingTicketList[usingTicketList.length - 1]);
+    
+    this.setData({
+      'ticketList[1]': usingTicketList
+    })
+  },
+
+  hUpdateTicketState: function(ticket_id){
+    // 点击使用
+    let hasTicketList = this.data.ticketList[0]
+    let usingTicketList = this.data.ticketList[1]
+    
+    hasTicketList[ticket_id] = usingTicketList[ticket_id]
+   
+    console.log("hUpdateTicketState before=", usingTicketList[ticket_id]);
+    hasTicketList[ticket_id].dataJsonSet.ticket_state = 1
+    // console.log("usingTicketList after=", usingTicketList[usingTicketList.length - 1]);
+    
+    delete usingTicketList[ticket_id]
+    
+    this.setData({
+      'ticketList[0]': hasTicketList,
+      'ticketList[1]': usingTicketList
+    })
+  },
+
   triggerCountDownFinish: function(e)
   {
     console.log("ticket triggerCountDownFinish e=", e);
     // 记录到数据库设置ticket 类型已经完成
+  },
+
+  tapFinish: function(e){
+    // 把ticket 移动到完成
+    let index = e.currentTarget.dataset.index
+    let hasTicketList = this.data.ticketList[1]
+    let usingTicketList = this.data.ticketList[2]
+
+    usingTicketList[index] = hasTicketList[index]
+   
+    console.log("hUpdateTicketState before=", usingTicketList[index]);
+    usingTicketList[index].dataJsonSet.ticket_state = 3
+    // console.log("usingTicketList after=", usingTicketList[usingTicketList.length - 1]);
+    
+    delete hasTicketList[index]
+    
+    this.setData({
+      'ticketList[1]': hasTicketList,
+      'ticketList[2]': usingTicketList
+    })
+
+    // 更新券的 state
+    wx.cloud.callFunction({
+     name: "updateData",
+     data: {
+       "dataBaseName": config.DATA_BASE_NAME.TICKET,
+       "whereObject": {
+         "_openid": app.globalData.openId,
+         "dataJsonSet.ticket_state": 2,
+         "dataJsonSet.ticket_id": index
+       },
+       "updateData":{
+         "dataJsonSet.ticket_state": 3
+       }
+      }
+     }).then(res => {
+     console.log("getTickets=", res);
+     const findList = res.result.data
+     console.log("getTickets=", findList);
+    })
   },
 
   /**

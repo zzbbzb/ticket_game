@@ -263,7 +263,8 @@ Page({
           "use_time": use_time,
           "ticket_state": 0,
           "giving_openid": app.globalData.openId,
-          "giving_name": app.globalData.userInfo.nickName
+          "giving_name": app.globalData.userInfo.nickName,
+          "ticket_use_state": 0
         },
         "waitFlag": true
       }

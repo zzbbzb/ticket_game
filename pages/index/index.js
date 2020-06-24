@@ -37,73 +37,73 @@ Page({
 
   onShow: function() {
     console.log("index onShow")
-    if(watcher == null){
-      watcher = db.collection("Ticket")
-      .where({
-        // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
-        _openid: app.globalData.open_id,
-        'dataJsonSet.giving_openid': app.globalData.open_id
-      })
-      // 发起监听
-      .watch({
-        onChange: (snapshot) => {
-          console.log('app snapshot onShow', snapshot)
-          if (snapshot.docChanges != undefined && snapshot.docChanges.length != 0) {
-            for(let i = 0; i < snapshot.docChanges.length; i++)
-            {
-              console.log('app snapshot onShow', snapshot.docChanges[i].dataType)
-              if(snapshot.docChanges[i].dataType === 'add'){
-                let tmpList = this.data.ticketList;
-                console.log('app snapshot docs', snapshot.docChanges[i].doc)
+    // if(watcher == null){
+    //   watcher = db.collection("Ticket")
+    //   .where({
+    //     // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
+    //     _openid: app.globalData.open_id,
+    //     'dataJsonSet.giving_openid': app.globalData.open_id
+    //   })
+    //   // 发起监听
+    //   .watch({
+    //     onChange: (snapshot) => {
+    //       console.log('app snapshot onShow', snapshot)
+    //       if (snapshot.docChanges != undefined && snapshot.docChanges.length != 0) {
+    //         for(let i = 0; i < snapshot.docChanges.length; i++)
+    //         {
+    //           console.log('app snapshot onShow', snapshot.docChanges[i].dataType)
+    //           if(snapshot.docChanges[i].dataType === 'add'){
+    //             let tmpList = this.data.ticketList;
+    //             console.log('app snapshot docs', snapshot.docChanges[i].doc)
 
-                tmpList.push(snapshot.docChanges[i].doc);
-                this.setData({
-                  ticketList: tmpList
-                })
-                console.log("this.data.ticketList=", this.data.ticketList)
-              }else if(snapshot.docChanges[i].dataType === 'remove')
-              {
-                let newList = this.data.ticketList
-                for(let i = 0; i < this.data.ticketList.length; i++)
-                {
-                  if(this.data.ticketList[i]._id === snapshot.docChanges[i].doc._id)
-                  {
-                    newList.splice(i,1);
-                    break;
-                  }
-                }
+    //             tmpList.push(snapshot.docChanges[i].doc);
+    //             this.setData({
+    //               ticketList: tmpList
+    //             })
+    //             console.log("this.data.ticketList=", this.data.ticketList)
+    //           }else if(snapshot.docChanges[i].dataType === 'remove')
+    //           {
+    //             let newList = this.data.ticketList
+    //             for(let i = 0; i < this.data.ticketList.length; i++)
+    //             {
+    //               if(this.data.ticketList[i]._id === snapshot.docChanges[i].doc._id)
+    //               {
+    //                 newList.splice(i,1);
+    //                 break;
+    //               }
+    //             }
 
-                this.setData({
-                  ticketList: newList
-                })
+    //             this.setData({
+    //               ticketList: newList
+    //             })
                 
-              }
-            }
+    //           }
+    //         }
             
-            // let url = this.GetCurrentPageUrl() //当前页面url
-            // console.log("app onshow url=", url);
-            // let dataType = snapshot.docChanges[0].dataType;
-            // console.log('app dataType', dataType)
-            // let data = snapshot.docChanges[0].doc.red_dots;
-            // this.UpdateListNum(data.list_num);
-            // this.globalData.red_dots.list_num = data.list_num
-            // if(url === "pages/list/list" && data.list_num != 0)
-            // {
-            //   console.log("app refresh list onshow");
-            //   this.globalData.currentPage = url;
-            //   this.GetCurrentPage().onShow();
-              // if(this.RefreshListPage)
-              // {
-              //   this.RefreshListPage(url);
-              // }
-            // }
-          }
-        },
-        onError: (err) => {
-          console.error('the watch closed because of error', err)
-        }
-      })
-    }
+    //         // let url = this.GetCurrentPageUrl() //当前页面url
+    //         // console.log("app onshow url=", url);
+    //         // let dataType = snapshot.docChanges[0].dataType;
+    //         // console.log('app dataType', dataType)
+    //         // let data = snapshot.docChanges[0].doc.red_dots;
+    //         // this.UpdateListNum(data.list_num);
+    //         // this.globalData.red_dots.list_num = data.list_num
+    //         // if(url === "pages/list/list" && data.list_num != 0)
+    //         // {
+    //         //   console.log("app refresh list onshow");
+    //         //   this.globalData.currentPage = url;
+    //         //   this.GetCurrentPage().onShow();
+    //           // if(this.RefreshListPage)
+    //           // {
+    //           //   this.RefreshListPage(url);
+    //           // }
+    //         // }
+    //       }
+    //     },
+    //     onError: (err) => {
+    //       console.error('the watch closed because of error', err)
+    //     }
+    //   })
+    // }
    
   },
 

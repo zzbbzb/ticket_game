@@ -19,6 +19,10 @@ Component({
     isShow: {
       type: Boolean,
       value: false
+    },
+    isFinish: {
+      type: Boolean,
+      value: false
     }
   },
 

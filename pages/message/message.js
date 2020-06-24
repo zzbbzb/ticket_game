@@ -15,8 +15,24 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    // 修改数据库
-    wx.cloud.callFunction({
+    (async()=>{
+      await this.updateMessageNewType()
+    })()
+    
+
+    if(app.globalData.messageNum != 0)
+    {
+      app.globalData.messageNum = 0;
+      app.UpdateListNum(0);
+    }
+
+    // 获得所有消息
+    this.getMessages()
+  },
+
+  updateMessageNewType: function(){
+     // 修改数据库
+     wx.cloud.callFunction({
       name: "updateData",
       data: {
         "dataBaseName": config.DATA_BASE_NAME.MESSAGE,
@@ -33,15 +49,6 @@ Page({
       const findList = res.result.data
       console.log("message onLoad=", findList);
     })
-
-    if(app.globalData.messageNum != 0)
-    {
-      app.globalData.messageNum = 0;
-      app.UpdateListNum(0);
-    }
-
-    // 获得所有消息
-    this.getMessages()
   },
 
   async getMessages(){
@@ -79,7 +86,7 @@ Page({
     // 设置message中 msg_receipt
     this.updateMessageReceipt(2, index)
     // 设置ticket中 ticket_state
-    this.updateTicketReceipt(11, index) 
+    this.updateTicketReceipt(2, index, 1) 
   },
 
   tapAgree: function(e)
@@ -97,7 +104,7 @@ Page({
     // 设置message中 msg_receipt
     this.updateMessageReceipt(1, index)
     // 设置ticket中 ticket_state
-    this.updateTicketReceipt(21, index)
+    this.updateTicketReceipt(1, index)
   },
 
   updateMessageReceipt: function(msg_receipt, index)
@@ -123,8 +130,17 @@ Page({
     })
   },
 
-  updateTicketReceipt: function(ticket_state, index)
+  updateTicketReceipt: function(ticket_use_state, index, ticket_state)
   {
+    let updateData = {
+      "dataJsonSet.ticket_use_state": ticket_use_state
+    }
+    if(ticket_state === 1)
+    {
+      updateData = {
+        "dataJsonSet.ticket_state": ticket_state
+      }
+    }
         // 更新券的 state
     wx.cloud.callFunction({
       name: "updateData",
@@ -134,15 +150,24 @@ Page({
           "dataJsonSet.ticket_state": 2,
           "dataJsonSet.ticket_id": this.data.messages[index].dataJsonSet.ticket_id
         },
-        "updateData":{
-          "dataJsonSet.ticket_state": ticket_state
-        }
+        "updateData":updateData
       }
     }).then(res => {
       console.log("getTickets=", res);
       const findList = res.result.data
       console.log("getTickets=", findList);
     })
+  },
+  
+  updateMessage: function(message){
+    (async()=>{
+      await this.updateMessageNewType()
+      let messages = this.data.messages
+      messages.push(message)
+      this.setData({
+        messages: messages
+      })
+    })()
   },
 
   /**

@@ -114,3 +114,11 @@ page {
   flex-direction: row;
   width: 100%;
 }
+
+.finishImg {
+  position: absolute;
+  width: 160rpx;
+  height: 50rpx;
+  top:76rpx;
+  right:20rpx;
+}

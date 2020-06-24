@@ -1,5 +1,8 @@
 <!--components/m-ticket/m-ticket.wxml-->
 <view class="ticket_container">
+	<block wx:if="{{isFinish}}">
+	  <image mode="widthFix" class="finishImg" src="/asserts/images/message/finish.png"></image>
+	</block>	
 	<view class="ticket_giving_name">
 		{{dataJsonSet.giving_name}}
 	</view>
