@@ -69,7 +69,7 @@ Page({
     let t = {}
     for(let i = 0; i < findList.length; i ++)
     {
-      t[findList[i].dataJsonSet.ticket_id] = findList[i]
+      t[findList[i]._id] = findList[i]
     }
 
     if(state === 0){
@@ -133,7 +133,7 @@ Page({
             "receipt_openId": this.data.ticketList[0][index].dataJsonSet.giving_openid,
             "receipt_user_name": this.data.ticketList[0][index].dataJsonSet.giving_name,
             "new_type": 0,
-            "ticket_id": this.data.ticketList[0][index].dataJsonSet.ticket_id
+            "ticket_id": this.data.ticketList[0][index]._id
           },
         }
       }).then(res => {
@@ -143,7 +143,7 @@ Page({
         let hasTicketList = this.data.ticketList[0]
         let usingTicketList = this.data.ticketList[1]
         
-        let useTicketId = hasTicketList[index].dataJsonSet.ticket_id
+        let useTicketId = hasTicketList[index]._id
         
 
         usingTicketList[index] = hasTicketList[index]

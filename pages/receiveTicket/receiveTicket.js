@@ -155,6 +155,7 @@ Page({
   },
 
   async addTicket(dataJsonSet){
+    
     console.log("receiveTicket addTicket=", dataJsonSet.dataJsonSet.ticket_state)
     dataJsonSet.dataJsonSet.ticket_state = 1
     console.log("receiveTicket addTicket=", dataJsonSet.dataJsonSet.ticket_state)
