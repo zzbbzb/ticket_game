@@ -97,7 +97,8 @@ Component({
       end_use_time: "0000/00/00",
       dialogShow: false,
       formData: {
-
+        startDate: "0000/00/00",
+        endDate: "0000/00/00"
       },
       validateFormState: false,
       error: '',
@@ -165,6 +166,7 @@ Component({
         } else {
           // 校验通过
           this.setData({
+            dialogShow: false,
             validateFormState: true
           })
         }
