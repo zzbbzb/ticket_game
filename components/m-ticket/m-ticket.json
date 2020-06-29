@@ -1,6 +1,11 @@
 {
   "component": true,
   "usingComponents": {
-    "m-countdown": "/components/m-countdown/m-countdown"
+    "m-countdown": "/components/m-countdown/m-countdown",
+    "mp-dialog": "/weui-miniprogram/dialog/dialog",
+    "mp-cell": "/weui-miniprogram/cell/cell",
+    "mp-cells": "/weui-miniprogram/cells/cells",
+    "mp-form": "/weui-miniprogram/form/form"
+    
   }
 }

@@ -45,7 +45,7 @@
 				</mp-cell>
 			</block>
 
-			<mp-cell prop="startDate" title="开始日期" ext-class="">
+			<!-- <mp-cell prop="startDate" title="开始日期" ext-class="">
         <picker data-field="startDate" mode="date" value="{{startDate}}" start="2015-01-01" end="2050-01-01" bindchange="bindDateChange">
           <view class="weui-input">{{startDate}}</view>
         </picker>
@@ -55,7 +55,7 @@
         <picker data-field="endDate" mode="date" value="{{endDate}}" start="2015-01-01" end="2050-01-01" bindchange="bindDateChange">
           <view class="weui-input">{{endDate}}</view>
         </picker>
-      </mp-cell>
+      </mp-cell> -->
 		</mp-cells>
 	</mp-form>
 
@@ -63,5 +63,5 @@
 </view>
 
 <mp-dialog title="" show="{{showDialog}}" bindbuttontap="tapDialogButton" buttons="{{[{text: '确认'}, {text: '取消'}]}}">
-	<view>是否要退出生成新券？</view>
+	<view slot="bd">是否要退出生成新券？</view>
 </mp-dialog>

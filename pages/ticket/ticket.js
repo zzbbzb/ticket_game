@@ -24,11 +24,15 @@ Page({
 
     let systemInfo = wx.getSystemInfoSync();
     let windowHeight = systemInfo.windowHeight;
-    let pxToRpxScale = 750 / systemInfo.windowWidth;
-    let statusBarHeight = systemInfo.statusBarHeight * pxToRpxScale
+    // let pxToRpxScale = 750 / systemInfo.windowWidth;
+    let statusBarHeight = systemInfo.statusBarHeight
 
     let swiperHeight = windowHeight - statusBarHeight
-    console.log(swiperHeight);
+    console.log("systemInfo=", systemInfo)
+    console.log("statusBarHeight=", statusBarHeight);
+
+    console.log("windowHeight=", windowHeight);
+    console.log("swiperHeigh=", swiperHeight);
 
     this.setData({
       tabs: tabs,

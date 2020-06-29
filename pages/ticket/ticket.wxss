@@ -31,7 +31,7 @@
 }
 
 .ticket_slot {
-  width:25vw;
+  min-width:25vw;
   display: flex;
   justify-content: center;
   align-items: center;

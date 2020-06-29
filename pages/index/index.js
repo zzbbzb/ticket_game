@@ -12,7 +12,8 @@ Page({
     hasUserInfo: false,
     ticketList: [],
     selectedTicketIndexList: [],
-    isShowGiving: false
+    isShowGiving: false,
+    error:""
   },
 
   onLoad: function () {
@@ -110,7 +111,23 @@ Page({
   checkboxChange: function(e){
     console.log('checkbox发生change事件，携带value值为：', e.detail)
     
+    let ticketList = this.data.ticketList
+    let values = e.detail.value
+
+    for (let i = 0, lenI = ticketList.length; i < lenI; ++i) {
+      ticketList[i].checked = false
+
+      for (let j = 0, lenJ = values.length; j < lenJ; ++j) {
+        if (i === parseInt(values[j])) {
+          ticketList[i].checked = true
+          break
+        }
+      }
+    }
+    console.log("checkboxChange ticketList=", ticketList)
+
     this.setData({
+      ticketList: ticketList,
       selectedTicketIndexList: e.detail.value,
       isShowGiving: e.detail.value.length > 0 ? true : false
     })

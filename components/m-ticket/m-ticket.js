@@ -23,6 +23,10 @@ Component({
     isFinish: {
       type: Boolean,
       value: false
+    },
+    isShowExpireTime: {
+      type: Boolean,
+      value: false
     }
   },
 
@@ -60,14 +64,23 @@ Component({
 
       // 设置开始时间和结束时间格式
       this.setData({
-        'start_use_time': util.formatTime(this.data.dataJsonSet.start_use_time),
-        'end_use_time': util.formatTime(this.data.dataJsonSet.end_use_time),
+        // 'start_use_time': util.formatTime(this.data.dataJsonSet.start_use_time),
+        // 'end_use_time': util.formatTime(this.data.dataJsonSet.end_use_time),
         'date_day': date_day,
         'date_time': date_time_hour + ':' + date_time_min + ':' + data_time_sec,
         'hour': parseInt(date_time_hour),
         'minute': parseInt(date_time_min),
         'second': parseInt(data_time_sec)
       })    
+    },
+    isShowExpireTime: function (value) {
+      console.log("isShowExpireTime=", value)
+      if(value === false){
+        this.setData({
+          start_use_time: "0000/00/00",
+          end_use_time: "0000/00/00"
+        })
+      }
     }
   },
 
@@ -79,7 +92,15 @@ Component({
       isPause: true,
       hour: 0,
       minute: 0,
-      second: 0
+      second: 0,
+      start_use_time: "0000/00/00",
+      end_use_time: "0000/00/00",
+      dialogShow: false,
+      formData: {
+
+      },
+      validateFormState: false,
+      error: '',
     },
 
     /**
@@ -91,6 +112,62 @@ Component({
         console.log("triggerCountDownFinsh e=", e)
 
         this.triggerEvent('isCountDownFinsh',{isFinshed: e.detail.isFinshed}, {})
-      }
+      },
+
+      tapUpdateUseTime: function(){
+        this.setData({
+          dialogShow: true
+        })
+      },
+
+      bindDateChange: function (e) {
+        const {
+          field
+        } = e.currentTarget.dataset
+    
+        let date = e.detail.value;
+        console.log("date=", date)
+    
+        if (field == "startDate") {
+          this.setData({
+            start_use_time: date
+          })
+          date += " 00:00:00";
+        } else {
+          this.setData({
+            end_use_time: date
+          })
+          date += " 23:59:59";
+        }
+    
+        
+        let dateTimestamp = new Date(date).getTime()
+    
+    
+        this.setData({
+          [`formData.${field}`]: dateTimestamp
+        })
+      },
+
+      tapDialogButton: function(){
+        this.validateFormData()
+      },
+
+      async validateFormData() {
+        // 检测结束时间不能小于开始时间
+        console.log(this.data.formData["startDate"] )
+        console.log(this.data.formData["endDate"] )
+        if (this.data.formData["startDate"] > this.data.formData["endDate"]) {
+          this.setData({
+            error: "结束时间不能小于开始时间",
+            validateFormState: false
+          })
+        } else {
+          // 校验通过
+          this.setData({
+            validateFormState: true
+          })
+        }
+      },
     }
   })

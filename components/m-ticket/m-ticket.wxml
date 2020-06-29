@@ -1,8 +1,8 @@
 <!--components/m-ticket/m-ticket.wxml-->
 <view class="ticket_container">
 	<block wx:if="{{isFinish}}">
-	  <image mode="widthFix" class="finishImg" src="/asserts/images/message/finish.png"></image>
-	</block>	
+		<image mode="widthFix" class="finishImg" src="/asserts/images/message/finish.png"></image>
+	</block>
 	<view class="ticket_giving_name">
 		{{dataJsonSet.giving_name}}
 	</view>
@@ -20,18 +20,39 @@
 					<view class="ticket_use_count_unit">次</view>
 				</block>
 				<block wx:else>
-					<m-countdown date_day="{{date_day}}" date_time="{{date_time}}" 
-											 isPause="{{isPause}}" isShow="{{isShow}}"
-										   hour="{{hour}}" minute="{{minute}}" second="{{second}}" 
-											 bind:isCountDownFinsh="triggerCountDownFinsh"/>
+					<m-countdown date_day="{{date_day}}" date_time="{{date_time}}" isPause="{{isPause}}" isShow="{{isShow}}" hour="{{hour}}" minute="{{minute}}" second="{{second}}" bind:isCountDownFinsh="triggerCountDownFinsh" />
 				</block>
 			</view>
 
-			<view class="ticket_use_time">
-				<view class="ticket_expiration_time">可用时间:{{start_use_time}}-{{end_use_time}} </view>
+			<view class="ticket_use_time" wx:if="{{isShowExpireTime}}">
+				<view class="ticket_expiration_time" bind:tap="tapUpdateUseTime">可用时间:{{start_use_time}}-{{end_use_time}} </view>
 			</view>
 
 		</view>
 	</view>
 
 </view>
+
+<mp-dialog title="设置过期时间" show="{{dialogShow}}" bindbuttontap="tapDialogButton" buttons="{{[{text: '确认'}]}}">
+
+	<view slot="bd">
+		<mp-form id="form" rules="{{rules}}" models="{{formData}}">
+			<mp-cells title="" footer="">
+				<mp-cell prop="startDate" title="开始日期：" ext-class="">
+					<picker data-field="startDate" mode="date" value="{{startDate}}" start="2015-01-01" end="2050-01-01" bindchange="bindDateChange">
+						<view class="weui-input">{{start_use_time}}</view>
+					</picker>
+				</mp-cell>
+
+				<mp-cell prop="endDate" title="结束日期：" ext-class="">
+					<picker data-field="endDate" mode="date" value="{{endDate}}" start="2015-01-01" end="2050-01-01" bindchange="bindDateChange">
+						<view class="weui-input">{{end_use_time}}</view>
+					</picker>
+				</mp-cell>
+			</mp-cells>
+		</mp-form>
+		<view class="error">{{error}}</view>
+	</view>
+
+	<!-- </mp-cell> -->
+</mp-dialog>

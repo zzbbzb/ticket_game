@@ -1,6 +1,9 @@
 <!--components/m-countdown/m-countdown.wxml-->
 <view class="dataTime">
-	<view class="data_day">{{date_day}}天</view>
+	<view class="data_day">
+		<view>{{date_day}}</view>
+		<view>天</view>
+	</view>
 	<view>{{date_time}} </view>
 	<block wx:if="{{isShow && isPause}}">
 		<image mode="widthFix" class="btn pauseBtn" src="/asserts/images/btns/pause.png" bindtap="tapPlay"></image>

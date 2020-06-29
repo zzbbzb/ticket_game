@@ -7,6 +7,8 @@
 .data_day {
   font-size: 20rpx;
   margin-right: 10rpx;
+  display: flex;
+  flex-direction: column;
 }
 
 .btn {
