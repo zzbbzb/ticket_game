@@ -27,6 +27,10 @@ Component({
     isShowExpireTime: {
       type: Boolean,
       value: false
+    },
+    isExpireTimeCanTap: {
+      type: Boolean,
+      value: false
     }
   },
 
@@ -61,11 +65,19 @@ Component({
         }
 
       }
+      
+      let start_use_time = "0000/00/00"
+      let end_use_time = "0000/00/00"
+      if(this.data.isExpireTimeCanTap == false)
+      {
+        start_use_time = util.formatTime(this.data.dataJsonSet.start_use_time)
+        end_use_time = util.formatTime(this.data.dataJsonSet.end_use_time)
+      }
 
       // 设置开始时间和结束时间格式
       this.setData({
-        // 'start_use_time': util.formatTime(this.data.dataJsonSet.start_use_time),
-        // 'end_use_time': util.formatTime(this.data.dataJsonSet.end_use_time),
+        'start_use_time': start_use_time,
+        'end_use_time': end_use_time,
         'date_day': date_day,
         'date_time': date_time_hour + ':' + date_time_min + ':' + data_time_sec,
         'hour': parseInt(date_time_hour),
@@ -93,8 +105,6 @@ Component({
       hour: 0,
       minute: 0,
       second: 0,
-      start_use_time: "0000/00/00",
-      end_use_time: "0000/00/00",
       dialogShow: false,
       formData: {
         startDate: "0000/00/00",
@@ -165,7 +175,13 @@ Component({
           })
         } else {
           // 校验通过
+          this.triggerEvent("updateTime", {
+            start_use_time: this.data.formData["startDate"],
+            end_use_time: this.data.formData["endDate"]
+          }, {})
           this.setData({
+            start_use_time: util.formatTime(this.data.formData["startDate"]),
+            end_use_time: util.formatTime(this.data.formData["endDate"]),
             dialogShow: false,
             validateFormState: true
           })

@@ -13,7 +13,7 @@ Page({
     ticketList: [],
     selectedTicketIndexList: [],
     isShowGiving: false,
-    error:""
+    selectUseTime: {}
   },
 
   onLoad: function () {
@@ -248,7 +248,11 @@ Page({
       
       for(let i = 0; i < this.data.selectedTicketIndexList.length; i++)
       {
-        selectedTicketList.push(this.data.ticketList[this.data.selectedTicketIndexList[i]])
+        const index = this.data.selectedTicketIndexList[i]
+        let selectTicket = this.data.ticketList[index]
+        selectTicket.dataJsonSet.start_use_time = this.data.selectUseTime[index].start_use_time
+        selectTicket.dataJsonSet.end_use_time = this.data.selectUseTime[index].end_use_time
+        selectedTicketList.push(selectTicket)
       }
 
     }
@@ -260,6 +264,27 @@ Page({
       title: '自定义转发标题',
       path: '/pages/receiveTicket/receiveTicket?givingOpenId='+ app.globalData.openId + "&givingTicketId=" + givingTicketId + "&curTimeStamp=" + curTimeStamp + "&selectedTicketList=" + JSON.stringify(selectedTicketList)
     } 
+  },
+
+  changeTicketTime: function(options){
+    console.log("changeTicketTime options=", options)
+    const index = options.currentTarget.dataset.index
+    const start_use_time = options.detail.start_use_time
+    const end_use_time = options.detail.end_use_time
+
+    let useTime = this.data.selectUseTime
+    useTime[index] = {
+      start_use_time: start_use_time,
+      end_use_time: end_use_time
+    }
+
+    let uIndex = useTime[index]
+    this.setData({
+      'uIndex': useTime[index]
+    })
+    
+    console.log("changeTicketTime selectUseTime=", this.data.selectUseTime)
+
   }
 
 })

@@ -4,7 +4,7 @@ page {
 }
 
 .ticket_container {
-  background-color: #fefef6;
+  background-color: white;
   display: flex;
   flex-direction: column;
   /* border: 1rpx solid black; */
@@ -12,7 +12,7 @@ page {
   border-radius: 15rpx;
   position: relative;
   box-shadow: 1px 1px 2px #88888850;
-  color:#c9c4ae;
+  /* color:#c9c4ae; */
 }
 
 .ticket_line {
@@ -64,7 +64,7 @@ page {
   display: flex;
   flex-direction: row;
   align-items: center;
-  color:#a3855f;
+  /* color:#a3855f; */
 }
 
 .ticket_head_name {

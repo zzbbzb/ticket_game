@@ -25,7 +25,7 @@
 			</view>
 
 			<view class="ticket_use_time" wx:if="{{isShowExpireTime}}">
-				<view class="ticket_expiration_time" bind:tap="tapUpdateUseTime">可用时间:{{start_use_time}}-{{end_use_time}} </view>
+				<view class="ticket_expiration_time" bind:tap="{{isExpireTimeCanTap? 'tapUpdateUseTime': ''}}">可用时间:{{start_use_time}}-{{end_use_time}} </view>
 			</view>
 
 		</view>
