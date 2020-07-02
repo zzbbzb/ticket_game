@@ -1,0 +1,15 @@
+<!--components/m-longSelectText/m-longSelectText.wxml-->
+<view bindlongtap="handlelongTap">
+  <slot></slot>
+</view>
+
+<block wx:if="{{show}}">
+  <view class="selectContainer" bind:tap="cancelSelect">
+    <view class="select">
+      <block wx:for="{{buttons}}" wx:key="index">
+        <button catch:tap="tapButton" >{{item}}</button>
+      </block>
+    </view>
+  </view>
+</block>
+

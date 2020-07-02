@@ -2,6 +2,7 @@
   "component": true,
   "usingComponents": {
     "m-ticket": "/components/m-ticket/m-ticket",
-    "mp-toptips": "/weui-miniprogram/toptips/toptips"
+    "mp-toptips": "/weui-miniprogram/toptips/toptips",
+    "m-longSelectText": "/components/m-longSelectText/m-longSelectText"
   }
 }

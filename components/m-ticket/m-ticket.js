@@ -118,6 +118,7 @@ Component({
      * 组件的方法列表
      */
     methods: {
+
       triggerCountDownFinsh: function(e)
       {
         console.log("triggerCountDownFinsh e=", e)
