@@ -13,14 +13,17 @@ Page({
     ticketList: [],
     selectedTicketIndexList: [],
     isShowGiving: false,
-    selectUseTime: {}
+    selectUseTime: {},
+    canShareNum: 0,
+    canShare: false,
+    error: ""
   },
 
   onLoad: function () {
     if (app.globalData.userInfo) {
       console.log("onLoad app.globalData.userInfo")
       this.updataUserInfoAndGetOtherInfo()
-    } 
+    }
     // else {
     //   // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
     //   // 所以此处加入 callback 以防止这种情况
@@ -32,6 +35,10 @@ Page({
     //   }
     // }
     console.log("index onlauch")
+
+    // for (let i = 0, lenI = ticketList.length; i < lenI; ++i) {
+    //   ticketList[i].checked = false
+    // }
     // 隐藏右上角分享
     // wx.hideShareMenu()
   },
@@ -77,10 +84,10 @@ Page({
                 this.setData({
                   ticketList: newList
                 })
-                
+
               }
             }
-            
+
             // let url = this.GetCurrentPageUrl() //当前页面url
             // console.log("app onshow url=", url);
             // let dataType = snapshot.docChanges[0].dataType;
@@ -105,32 +112,95 @@ Page({
         }
       })
     }
-   
+
   },
 
   checkboxChange: function(e){
     console.log('checkbox发生change事件，携带value值为：', e.detail)
-    
+
     let ticketList = this.data.ticketList
     let values = e.detail.value
+    let preValues = this.data.selectedTicketIndexList
+    let selectTicketIndex = -1
 
-    for (let i = 0, lenI = ticketList.length; i < lenI; ++i) {
-      ticketList[i].checked = false
+    console.log("selectedTicketIndexList = " , this.data.selectedTicketIndexList)
 
-      for (let j = 0, lenJ = values.length; j < lenJ; ++j) {
-        if (i === parseInt(values[j])) {
-          ticketList[i].checked = true
+    let preValuesLength = preValues.length
+    console.log("preValuesLength=", preValues.length)
+    let canShareNum = this.data.canShareNum
+
+    if(values.length > preValuesLength) // 增加
+    {
+      for (let i = 0, lenI = ticketList.length; i < lenI; ++i) {
+        for (let j = 0, lenJ = values.length; j < lenJ; ++j) {
+          if (i === parseInt(values[j]) && ticketList[i].checked !== true) {
+            ticketList[i].checked = true
+            ticketList[i].changeTime = false
+            selectTicketIndex = i
+            break
+          }
+        }
+      }
+    }
+    else{ // 减少
+      for(let i = 0, lenI = preValuesLength; i < lenI; i++){
+        let findflag = false;
+        for(let j = 0 , lenJ = values.length; j < lenJ; j++){
+          if(values[j] === preValues[i]){
+            findflag = true
+            break
+          }
+        }
+        if(findflag === false){
+          selectTicketIndex = parseInt(preValues[i])
+          console.log("min selectTicketIndex= ", selectTicketIndex)
+          ticketList[selectTicketIndex].checked = false
+          if(ticketList[selectTicketIndex].changeTime)
+          {
+            canShareNum = canShareNum - 1
+          }
+          ticketList[selectTicketIndex].changeTime = false
           break
         }
       }
     }
+
     console.log("checkboxChange ticketList=", ticketList)
 
-    this.setData({
-      ticketList: ticketList,
-      selectedTicketIndexList: e.detail.value,
-      isShowGiving: e.detail.value.length > 0 ? true : false
-    })
+    console.log("selectTicketIndex =", selectTicketIndex)
+
+    let selectTicket = null
+
+    if(selectTicketIndex !== -1)
+    {
+      selectTicket = "ticketList["+ selectTicketIndex + "].checked"
+    }
+
+    console.log(selectTicket)
+
+    let canShare = false
+    if(canShareNum === e.detail.value.length){
+      canShare = true
+    }
+
+    console.log("canShareNum=",canShareNum)
+    console.log("e.detail.value.length=",e.detail.value.length)
+    console.log("e.detail.value=",e.detail.value)
+    console.log("canShare=",canShare)
+
+    
+    if(selectTicket !== null){
+      this.setData({
+        canShare: canShare,
+        canShareNum : canShareNum,
+        [selectTicket]: ticketList[selectTicketIndex].checked,
+        selectedTicketIndexList: e.detail.value,
+        isShowGiving: e.detail.value.length > 0 ? true : false
+      })
+    }
+
+    console.log("ticketList = ", this.data.ticketList)
+
   },
 
   async getTickets() {
@@ -213,7 +283,7 @@ Page({
       await this.getTickets();
     }
   },
-  
+
   // 写入userInfo数据库
   async addUserInfo() {
     await wx.cloud.callFunction({
@@ -230,8 +300,16 @@ Page({
     })
   },
 
+  handleShareError: function(){
+    console.log("catch handleShareError")
+    this.setData({
+      error:"分享券可用时间不能为0000/00/00"
+    })
+  },
+
   // 转发
   onShareAppMessage:function(res){
+    console.log("bind onShareAppMessage")
     if (res.from === 'button') {
       // 来自页面内转发按钮
       console.log("res.target=", res.target)
@@ -245,7 +323,7 @@ Page({
       curTimeStamp = new Date().getTime();
       // 券id
       givingTicketId = app.globalData.openId + curTimeStamp;
-      
+
       for(let i = 0; i < this.data.selectedTicketIndexList.length; i++)
       {
         const index = this.data.selectedTicketIndexList[i]
@@ -263,7 +341,7 @@ Page({
     return {
       title: '自定义转发标题',
       path: '/pages/receiveTicket/receiveTicket?givingOpenId='+ app.globalData.openId + "&givingTicketId=" + givingTicketId + "&curTimeStamp=" + curTimeStamp + "&selectedTicketList=" + JSON.stringify(selectedTicketList)
-    } 
+    }
   },
 
   changeTicketTime: function(options){
@@ -278,13 +356,26 @@ Page({
       end_use_time: end_use_time
     }
 
-    let uIndex = useTime[index]
-    this.setData({
-      'uIndex': useTime[index]
-    })
-    
-    console.log("changeTicketTime selectUseTime=", this.data.selectUseTime)
+    let uIndex = "selectUseTime." + index
+    let changeTime = "ticketList["+ index + "].changeTime"
 
+    let canShare = false
+ 
+    if(this.data.canShareNum + 1 === this.data.selectedTicketIndexList.length)
+    {
+      canShare = true
+    }
+
+    this.setData({
+      canShare: canShare,
+      [uIndex]: useTime[index],
+      [changeTime]: true,
+      canShareNum: this.data.canShareNum + 1
+    })
+
+
+    console.log("changeTicketTime selectUseTime=", this.data.selectUseTime)
+    console.log("changeTicketTime ticketList=", this.data.ticketList)
   }
 
 })

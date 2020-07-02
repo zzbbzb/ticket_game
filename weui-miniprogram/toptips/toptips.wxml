@@ -1,10 +1,21 @@
+<block wx:if="{{isCustomNavigation}}">
+  <view class="weui-extra">
+      <view class="weui-toptips {{ ios ? 'ios' : 'android'}} {{className}} {{extClass}} {{show ? 'weui-toptips_show' :  ''}}" 
+            style="margin-top: {{statusBarHeight}}px;">
 
-<view class="weui-extra" >
-  <view class="weui-toptips {{ios ? 'ios' : 'android'}} {{className}} {{extClass}} {{show ? 'weui-toptips_show' :  ''}}" style="margin-top: {{statusBarHeight}}px;">
-    <block wx:if="{{msg}}">{{msg}}</block>
-    <block wx:else>
-        <slot></slot>
-    </block>
+        <block wx:if="{{msg}}">{{msg}}</block>
+        <block wx:else>
+          <slot></slot>
+        </block>
+      </view>
   </view>
+</block>
 
-</view>
+<block wx:else>
+		<view class="weui-toptips {{className}} {{extClass}} {{show ? 'weui-toptips_show' :  ''}}">
+			<block wx:if="{{msg}}">{{msg}}</block>
+			<block wx:else>
+				<slot></slot>
+			</block>
+		</view>
+	</block>

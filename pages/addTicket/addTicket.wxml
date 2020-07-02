@@ -1,4 +1,4 @@
-<mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
+<mp-toptips msg="{{error}}" type="error" show="{{error}}" isCustomNavigation="{{true}}"></mp-toptips>
 <mp-navigation-bar show="{{true}}" title="添加券" back="{{true}}" 
 										background="#dddddd" bindback="goBack"></mp-navigation-bar>
 

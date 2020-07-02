@@ -1,4 +1,5 @@
 <!--index.wxml-->
+<mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
 <view class="container">
 
 	<block wx:if="{{hasUserInfo}}">
@@ -14,7 +15,7 @@
 			<checkbox-group bindchange="checkboxChange">
 				<block wx:for="{{ticketList}}" wx:key="index">
 					<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}" 
-										isShowExpireTime="{{item.checked}}" isExpireTimeCanTap="{{true}}" bind:updateTime="changeTicketTime" data-index="{{index}}">
+										isShowExpireTime="{{ticketList[index].checked}}" isExpireTimeCanTap="{{true}}" bind:updateTime="changeTicketTime" data-index="{{index}}">
 						<view class="ticket_slot btn" slot="ticket_slot">
 							<checkbox value="{{index}}" checked="{{item.checked}}" />
 						</view>
@@ -24,9 +25,19 @@
 		</view>
 		<view class="funcBtns">
 			<block wx:if="{{isShowGiving}}">
-				<button class='btn sharebtn givingBtn' open-type="share">
-					<image class="btn givingImg" src="/asserts/images/btns/giving.png" bindtap="tapShare"></image>
-				</button>
+				<block wx:if="{{!canShare}}">
+					<view capture-catch:touchstart="handleShareError">
+						<button class='btn sharebtn givingBtn' open-type="share">
+							<image class="btn givingImg" src="/asserts/images/btns/giving.png" bindtap="tapShare"></image>
+						</button>
+					</view>
+				</block>
+				<block wx:else>
+					<button class='btn sharebtn givingBtn' open-type="share">
+						<image class="btn givingImg" src="/asserts/images/btns/giving.png" bindtap="tapShare"></image>
+					</button>
+				</block>
+				
 			</block>
 
 			<image class="btn" src="/asserts/images/btns/add.png" bindtap="tapAddTicket"></image>

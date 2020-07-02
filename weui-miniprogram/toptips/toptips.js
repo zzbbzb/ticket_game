@@ -119,6 +119,10 @@ Component({
         extClass: {
             type: String,
             value: ''
+        },
+        isCustomNavigation: {
+            type: Boolean,
+            value: false
         }
     },
     data: {

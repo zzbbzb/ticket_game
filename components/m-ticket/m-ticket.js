@@ -168,7 +168,14 @@ Component({
         // 检测结束时间不能小于开始时间
         console.log(this.data.formData["startDate"] )
         console.log(this.data.formData["endDate"] )
-        if (this.data.formData["startDate"] > this.data.formData["endDate"]) {
+
+        if(this.data.formData["startDate"] === "0000/00/00" || this.data.formData["endDate"] === "0000/00/00"){
+          this.setData({
+            error: "时间不能为 0000/00/00",
+            validateFormState: false
+          })
+        }
+        else if (this.data.formData["startDate"] > this.data.formData["endDate"]) {
           this.setData({
             error: "结束时间不能小于开始时间",
             validateFormState: false
