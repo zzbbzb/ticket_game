@@ -16,7 +16,8 @@ Page({
     selectUseTime: {},
     canShareNum: 0,
     canShare: false,
-    error: ""
+    error: "",
+    scrollOffset: 0
   },
 
   onLoad: function () {
@@ -72,11 +73,11 @@ Page({
               }else if(snapshot.docChanges[i].dataType === 'remove')
               {
                 let newList = this.data.ticketList
-                for(let i = 0; i < this.data.ticketList.length; i++)
+                for(let j = 0; j < this.data.ticketList.length; j++)
                 {
-                  if(this.data.ticketList[i]._id === snapshot.docChanges[i].doc._id)
+                  if(this.data.ticketList[j]._id === snapshot.docChanges[i].doc._id)
                   {
-                    newList.splice(i,1);
+                    newList.splice(j,1);
                     break;
                   }
                 }
@@ -203,6 +204,7 @@ Page({
 
   },
 
+  /* 获得index中所有券 */
   async getTickets() {
     await wx.cloud.callFunction({
       name: "queryData",
@@ -376,6 +378,81 @@ Page({
 
     console.log("changeTicketTime selectUseTime=", this.data.selectUseTime)
     console.log("changeTicketTime ticketList=", this.data.ticketList)
-  }
+  },
+
+  onPageScroll: function(res) {
+    // console.log("onPageScroll res =", res);
+    this.setData({
+      scrollOffset: res.scrollTop
+    })
+  },
+
+  deleteTicket: function(e) {
+    console.log("deleteTicket e=", e)
+
+    const index = e.detail.index
+    
+    const id = this.data.ticketList[index]._id
+    console.log("deleteTicket id=", id)
+    let ticketList =  this.data.ticketList
+    // ticketList.splice(index, 1);
+
+    // this.setData({
+    //   ticketList: ticketList
+    // })
+
+    console.log("deleteTicket this.data.selectedTicketIndexList=", this.data.selectedTicketIndexList)
+    let selectedTicketIndexList = this.data.selectedTicketIndexList
+    let canShareNum = this.data.canShareNum
+    for(let i = 0, len = selectedTicketIndexList.length; i < len; i++){
+      const selectedIndex = parseInt(selectedTicketIndexList[i])
+      if(selectedIndex === index){
+        if(ticketList[selectedIndex].changeTime === true){
+          canShareNum = canShareNum - 1
+        }
+        selectedTicketIndexList.splice(i, 1)
+        break
+      }
+    }
+
+    console.log("deleteTicket selectedTicketIndexList=", selectedTicketIndexList)
+
+    let shareFlag = this.data.isShowGiving
+    if(selectedTicketIndexList.length > 0){
+      shareFlag = true
+    }else{
+      shareFlag = false
+    }
+
+    let canShare = this.data.canShare
+    if(canShareNum === selectedTicketIndexList.length)
+    {
+      canShare = true
+    }
+
+    this.setData({
+      selectedTicketIndexList: selectedTicketIndexList,
+      isShowGiving: shareFlag,
+      canShareNum: canShareNum,
+      canShare: canShare
+    })
+
+    // 数据库删除
+    this.deleteTicketInDB(id)
+  },
+
+  async deleteTicketInDB(id) {
+    await wx.cloud.callFunction({
+      name: "deleteData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.TICKET,
+        "whereObject": {
+          "_id": id,
+        },
+      }
+    }).then(res => {
+      console.log(res)
+    })
+  },
 
 })

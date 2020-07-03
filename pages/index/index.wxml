@@ -14,7 +14,8 @@
 
 			<checkbox-group bindchange="checkboxChange">
 				<block wx:for="{{ticketList}}" wx:key="index">
-					<m-longSelectText>
+					<m-longSelectText scrollOffset="{{scrollOffset}}" index="{{index}}"
+														bind:deleteTicket="deleteTicket">
 						<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}" 
 											isShowExpireTime="{{ticketList[index].checked}}" isExpireTimeCanTap="{{true}}" bind:updateTime="changeTicketTime" data-index="{{index}}">
 							<view class="ticket_slot btn" slot="ticket_slot">

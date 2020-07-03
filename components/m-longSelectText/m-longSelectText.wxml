@@ -1,15 +1,31 @@
 <!--components/m-longSelectText/m-longSelectText.wxml-->
-<view bindlongtap="handlelongTap">
-  <slot></slot>
-</view>
-
 <block wx:if="{{show}}">
-  <view class="selectContainer" bind:tap="cancelSelect">
-    <view class="select">
-      <block wx:for="{{buttons}}" wx:key="index">
-        <button catch:tap="tapButton" >{{item}}</button>
-      </block>
-    </view>
+  <view bindlongtap="handlelongTap" capture-catch:touchmove='btntouchmove'>
+    <slot></slot>
   </view>
 </block>
+<block wx:else>
+  <view bindlongtap="handlelongTap">
+    <slot></slot>
+  </view>
+</block>
+
+
+<block wx:if="{{show}}">
+  <view class="selectContainer" capture-catch:touchstart="cancelSelect">
+  </view>
+  <view class="select" style="top:{{top}}px; left:{{left}}px;">
+    <block wx:for="{{buttons}}" wx:key="index">
+      <button class="btn" bind:tap="tapButton" catch:touchmove='btntouchmove'>{{item}}</button>
+    </block>
+  </view>
+</block>
+
+<mp-dialog title="" show="{{dialogShow}}" bindbuttontap="tapDialogButton" buttons="{{[{text: '取消'},{text: '确认'}]}}">
+
+	<view slot="bd">
+  确定要删除此券
+	</view>
+
+</mp-dialog>
 
