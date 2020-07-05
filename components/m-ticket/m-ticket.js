@@ -12,7 +12,7 @@ Component({
    * 组件的属性列表
    */
   properties: {
-    dataJsonSet: {  
+    ticket: {  
       type: Object,
       value: {}
     },
@@ -38,30 +38,31 @@ Component({
   },
 
   observers: {
-    dataJsonSet: function () {
+    ticket: function () {
       // timestamp 被设置时，将它展示为可读时间字符串
       // 分钟倒计时
       let date_day = 0
       let date_time_hour = "00"
       let date_time_min = "00"
       let data_time_sec = "00"
-      console.log("this.data.dataJsonSet=", this.data.dataJsonSet)
 
-      if( this.data.dataJsonSet.ticket_type === 1){
-        if(this.data.dataJsonSet.use_time_type === '天'){
-          date_day = this.data.dataJsonSet.use_time
+      console.log("this.data.ticket=", this.data.ticket)
+
+      if( this.data.ticket.dataJsonSet.ticket_type === 1){
+        if(this.data.ticket.dataJsonSet.use_time_type === '天'){
+          date_day = this.data.ticket.dataJsonSet.use_time
         }
         
-        if(this.data.dataJsonSet.use_time_type === '时'){
-          date_time_hour = util.formatNumber(this.data.dataJsonSet.use_time);
+        if(this.data.ticket.dataJsonSet.use_time_type === '时'){
+          date_time_hour = util.formatNumber(this.data.ticket.dataJsonSet.use_time);
         }
 
-        if(this.data.dataJsonSet.use_time_type === '分'){
-          date_time_min = util.formatNumber(this.data.dataJsonSet.use_time);
+        if(this.data.ticket.dataJsonSet.use_time_type === '分'){
+          date_time_min = util.formatNumber(this.data.ticket.dataJsonSet.use_time);
         }
 
-        if(this.data.dataJsonSet.use_time_type === '秒'){
-          data_time_sec = util.formatNumber(this.data.dataJsonSet.use_time);
+        if(this.data.ticket.dataJsonSet.use_time_type === '秒'){
+          data_time_sec = util.formatNumber(this.data.ticket.dataJsonSet.use_time);
         }
 
       }
@@ -70,14 +71,33 @@ Component({
       let end_use_time = "0000/00/00"
       if(this.data.isExpireTimeCanTap == false)
       {
-        start_use_time = util.formatTime(this.data.dataJsonSet.start_use_time)
-        end_use_time = util.formatTime(this.data.dataJsonSet.end_use_time)
+        start_use_time = util.formatTime(this.data.ticket.dataJsonSet.start_use_time)
+        end_use_time = util.formatTime(this.data.ticket.dataJsonSet.end_use_time)
+        this.setData({
+          'start_use_time': start_use_time,
+          'end_use_time': end_use_time
+        })
+      }
+      else{
+        if('useTime' in this.data.ticket)
+        {
+          if(this.data.ticket.useTime.start_use_time !== 0 
+              || this.data.ticket.useTime.end_use_time !== 0){
+            start_use_time = util.formatTime(this.data.ticket.useTime.start_use_time)
+            end_use_time = util.formatTime(this.data.ticket.useTime.end_use_time)
+          }
+        }
+
+        this.setData({
+          'start_use_time': start_use_time,
+          'end_use_time': end_use_time
+        })
       }
 
       // 设置开始时间和结束时间格式
       this.setData({
-        'start_use_time': start_use_time,
-        'end_use_time': end_use_time,
+        // 'start_use_time': start_use_time,
+        // 'end_use_time': end_use_time,
         'date_day': date_day,
         'date_time': date_time_hour + ':' + date_time_min + ':' + data_time_sec,
         'hour': parseInt(date_time_hour),
@@ -94,6 +114,27 @@ Component({
         })
       }
     }
+    //,
+    // startDate: function (value){
+    //   console.log("m-ticket startDate value=", value)
+    //   if(value !== 0){
+    //     let start_use_time = util.formatTime(value)
+    //     console.log("m-ticket startDate start_use_time=", start_use_time)
+    //     this.setData({
+    //       start_use_time: start_use_time
+    //     })
+    //   }
+    // }, 
+    // endDate: function (value){
+    //   console.log("m-ticket endDate value=", value)
+    //   if(value !== 0){
+    //     let end_use_time = util.formatTime(value)
+    //     console.log("m-ticket endDate end_use_time=", end_use_time)
+    //     this.setData({
+    //       end_use_time: end_use_time
+    //     })
+    //   }
+    // }
   },
 
     /**
@@ -128,7 +169,8 @@ Component({
 
       tapUpdateUseTime: function(){
         this.setData({
-          dialogShow: true
+          dialogShow: true,
+          error:""
         })
       },
 
@@ -195,5 +237,9 @@ Component({
           })
         }
       },
+
+      catchLongTap: function(){
+        return false
+      }
     }
   })

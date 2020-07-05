@@ -6,7 +6,7 @@
 				<block wx:if="{{index == 0}}">
 					<view class="ticket_content">
 						<block wx:for="{{ticketList[activeTab]}}" wx:key="index">
-							<m-ticket dataJsonSet="{{ticketList[activeTab][index].dataJsonSet}}" 
+							<m-ticket ticket="{{ticketList[activeTab][index]}}" 
 										bind:isCountDownFinsh="triggerCountDownFinish" isShowExpireTime="{{true}}" isExpireTimeCanTap="{{false}}">
 								<view class="ticket_slot" slot="ticket_slot"> 
 									<button data-index="{{index}}" class="btn" type="primary" bindtap="tapUse">使用</button>
@@ -19,7 +19,7 @@
 				<block wx:if="{{index == 1}}">
 					<view class="ticket_content">
 						<block wx:for="{{ticketList[activeTab]}}" wx:key="index">
-							<m-ticket dataJsonSet="{{ticketList[activeTab][index].dataJsonSet}}" 
+							<m-ticket ticket="{{ticketList[activeTab][index]}}" 
 												isShow="{{ticketList[activeTab][index].dataJsonSet.ticket_use_state === 1 && ticketList[activeTab][index].dataJsonSet.ticket_type === 1}}"
 												isShowExpireTime="{{true}}" isExpireTimeCanTap="{{false}}">
 								<view class="ticket_slot" slot="ticket_slot"> 
@@ -38,7 +38,7 @@
 				<block wx:if="{{index == 2}}">
 					<view class="ticket_content">
 						<block wx:for="{{ticketList[activeTab]}}" wx:key="index">
-							<m-ticket dataJsonSet="{{ticketList[activeTab][index].dataJsonSet}}" isFinish="{{ticketList[activeTab][index].dataJsonSet.ticket_use_state === 1}}"
+							<m-ticket ticket="{{ticketList[activeTab][index]}}" isFinish="{{ticketList[activeTab][index].dataJsonSet.ticket_use_state === 1}}"
 							isShowExpireTime="{{true}}" isExpireTimeCanTap="{{false}}">
 							</m-ticket>
 						</block>
@@ -48,7 +48,7 @@
 				<block wx:if="{{index == 3}}">
 					<view class="ticket_content">
 						<block wx:for="{{ticketList[activeTab]}}" wx:key="index">
-							<m-ticket dataJsonSet="{{ticketList[activeTab][index].dataJsonSet}}" isShowExpireTime="{{true}}" isExpireTimeCanTap="{{false}}">
+							<m-ticket ticket="{{ticketList[activeTab][index]}}" isShowExpireTime="{{true}}" isExpireTimeCanTap="{{false}}">
 							</m-ticket>
 						</block>
 					</view>

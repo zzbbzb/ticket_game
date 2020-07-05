@@ -16,8 +16,10 @@
 				<block wx:for="{{ticketList}}" wx:key="index">
 					<m-longSelectText scrollOffset="{{scrollOffset}}" index="{{index}}"
 														bind:deleteTicket="deleteTicket">
-						<m-ticket dataJsonSet="{{ticketList[index].dataJsonSet}}" 
-											isShowExpireTime="{{ticketList[index].checked}}" isExpireTimeCanTap="{{true}}" bind:updateTime="changeTicketTime" data-index="{{index}}">
+						<m-ticket ticket="{{ticketList[index]}}" 
+											isShowExpireTime="{{ticketList[index].checked}}" 
+											isExpireTimeCanTap="{{true}}" bind:updateTime="changeTicketTime" 
+											data-index="{{index}}">
 							<view class="ticket_slot btn" slot="ticket_slot">
 								<checkbox value="{{index}}" checked="{{item.checked}}" />
 							</view>
@@ -31,13 +33,15 @@
 				<block wx:if="{{!canShare}}">
 					<view capture-catch:touchstart="handleShareError">
 						<button class='btn sharebtn givingBtn' open-type="share">
-							<image class="btn givingImg" src="/asserts/images/btns/giving.png" bindtap="tapShare"></image>
+							<image class="btn givingImg" src="/asserts/images/btns/giving.png" 
+										 bindtap="tapShare"></image>
 						</button>
 					</view>
 				</block>
 				<block wx:else>
 					<button class='btn sharebtn givingBtn' open-type="share">
-						<image class="btn givingImg" src="/asserts/images/btns/giving.png" bindtap="tapShare"></image>
+						<image class="btn givingImg" src="/asserts/images/btns/giving.png" 
+									 bindtap="tapShare"></image>
 					</button>
 				</block>
 				

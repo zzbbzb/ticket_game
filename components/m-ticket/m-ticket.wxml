@@ -4,28 +4,33 @@
 		<image mode="widthFix" class="finishImg" src="/asserts/images/message/finish.png"></image>
 	</block>
 	<view class="ticket_giving_name">
-		{{dataJsonSet.giving_name}}
+		{{ticket.dataJsonSet.giving_name}}
 	</view>
 	<view class="ticket_line"></view>
 	<view class="ticket_content">
 		<view class="ticket_head">
-			<view class="ticket_head_name">{{dataJsonSet.ticket_name}}</view>
-			<view class="ticket_head_detail">{{dataJsonSet.ticket_detail_info}}</view>
+			<view class="ticket_head_name">{{ticket.dataJsonSet.ticket_name}}</view>
+			<view class="ticket_head_detail">{{ticket.dataJsonSet.ticket_detail_info}}</view>
 			<slot name="ticket_slot"></slot>
 		</view>
 		<view class="ticket_foot">
 			<view class="ticket_use_count">
-				<block wx:if="{{dataJsonSet.ticket_type === 0}}">
-					<view>{{dataJsonSet.use_count}}</view>
+				<block wx:if="{{ticket.dataJsonSet.ticket_type === 0}}">
+					<view>{{ticket.dataJsonSet.use_count}}</view>
 					<view class="ticket_use_count_unit">次</view>
 				</block>
 				<block wx:else>
-					<m-countdown date_day="{{date_day}}" date_time="{{date_time}}" isPause="{{isPause}}" isShow="{{isShow}}" hour="{{hour}}" minute="{{minute}}" second="{{second}}" bind:isCountDownFinsh="triggerCountDownFinsh" />
+					<m-countdown date_day="{{date_day}}" date_time="{{date_time}}" 
+											 isPause="{{isPause}}" isShow="{{isShow}}" hour="{{hour}}" 
+											 minute="{{minute}}" second="{{second}}" 
+											 bind:isCountDownFinsh="triggerCountDownFinsh" />
 				</block>
 			</view>
 
 			<view class="ticket_use_time" wx:if="{{isShowExpireTime}}">
-				<view class="ticket_expiration_time" bind:tap="{{isExpireTimeCanTap? 'tapUpdateUseTime': ''}}">可用时间:{{start_use_time}}-{{end_use_time}} </view>
+				<view class="ticket_expiration_time" 
+										catch:tap="{{isExpireTimeCanTap? 'tapUpdateUseTime': ''}}"
+										catch:longtap="catchLongTap">可用时间:{{start_use_time}}-{{end_use_time}} </view>
 			</view>
 
 		</view>
@@ -39,13 +44,15 @@
 		<mp-form id="form" rules="{{rules}}" models="{{formData}}">
 			<mp-cells title="" footer="">
 				<mp-cell prop="startDate" title="开始日期：" ext-class="">
-					<picker data-field="startDate" mode="date" value="{{startDate}}" start="2015-01-01" end="2050-01-01" bindchange="bindDateChange">
+					<picker data-field="startDate" mode="date" value="{{startDate}}" 
+									start="2015-01-01" end="2050-01-01" bindchange="bindDateChange">
 						<view class="weui-input">{{start_use_time}}</view>
 					</picker>
 				</mp-cell>
 
 				<mp-cell prop="endDate" title="结束日期：" ext-class="">
-					<picker data-field="endDate" mode="date" value="{{endDate}}" start="2015-01-01" end="2050-01-01" bindchange="bindDateChange">
+					<picker data-field="endDate" mode="date" value="{{endDate}}"
+									start="2015-01-01" end="2050-01-01" bindchange="bindDateChange">
 						<view class="weui-input">{{end_use_time}}</view>
 					</picker>
 				</mp-cell>
@@ -54,5 +61,4 @@
 		<view class="error">{{error}}</view>
 	</view>
 
-	<!-- </mp-cell> -->
 </mp-dialog>

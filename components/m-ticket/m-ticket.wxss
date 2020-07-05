@@ -15,6 +15,10 @@ page {
   /* color:#c9c4ae; */
 }
 
+.ticket_container_selected {
+  background-color: rgba(180, 178, 178, 0.247);
+}
+
 .ticket_line {
   height: 1rpx;
   border-bottom: 1rpx dashed #88888831;
