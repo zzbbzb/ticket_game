@@ -5,7 +5,8 @@
     "pages/index/index",
     "pages/receiveTicket/receiveTicket",
     "pages/addTicket/addTicket",
-    "pages/message/message"
+    "pages/message/message",
+    "pages/viewUpdateTicket/viewUpdateTicket"
   ],
   "window": {
     "backgroundTextStyle": "light",

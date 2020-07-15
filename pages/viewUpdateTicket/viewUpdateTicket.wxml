@@ -1,0 +1,64 @@
+<!--pages/viewUpdateTicket/viewUpdateTicket.wxml-->
+<view class="container">
+	<mp-form id="form" rules="{{rules}}" models="{{formData}}">
+		<mp-cells title="" footer="">
+			<mp-cell prop="ticketName" title="券名称:" ext-class="">
+				<input bindinput="formInputChange" data-field="ticketName" 
+							 class="weui-input" placeholder="请输入券名称" disabled="{{isDisabled}}"
+               value="{{ticket.dataJsonSet.ticket_name}}"/>
+			</mp-cell>
+
+			<mp-cell prop="ticketDetail" title="券详细信息:" ext-class="">
+				<textarea class="ticket_textarea" bindinput="formTextAreaChange" 
+									data-field="ticketDetail" maxlength="-1" bindblur="bindTextAreaBlur" 
+									auto-height placeholder="写下券的详细信息"  disabled="{{isDisabled}}"
+                  value="{{ticket.dataJsonSet.ticket_detail_info}}"/>
+				</mp-cell>
+
+			<mp-cell prop="ticketType" title="券的类型:" ext-class="">
+				<view class="section">
+          <radio-group class="radio-group" bindchange="radioChange">
+          	<radio class="radio" wx:for-items="{{radio_items}}" wx:key="name" 
+									 value="{{item.name}}" checked="{{item.checked}}" disabled="{{isDisabled}}">
+            	<text>{{item.value}}</text>
+            </radio>
+          </radio-group>
+        </view>
+			</mp-cell>
+
+			<block wx:if="{{radioValue === 0}}">
+				<mp-cell prop="ticketUseCount" title="使用次数:" ext-class="">
+					<input bindinput="formInputChange" data-field="ticketUseCount" 
+								 class="weui-input" placeholder="请输入券的使用次数" disabled="{{isDisabled}}" value="{{ticket.dataJsonSet.use_count}}"/>
+				</mp-cell>
+			</block>
+			<block wx:else>
+				<mp-cell prop="useTimeType" title="耗时类型:" ext-class="">
+          	<picker bindchange="bindUseTimeTypeChange" value="{{timeTypeIndex}}" 
+										range="{{timeType}}" disabled="{{isDisabled}}" >
+              <view class="weui-select">{{timeType[timeTypeIndex]}}</view>
+            </picker>
+        </mp-cell>
+				<mp-cell prop="useTime" title="耗时时间:" ext-class="">
+					<input bindinput="formInputChange" data-field="useTime" class="weui-input" placeholder="请输耗时" 
+                 disabled="{{isDisabled}}" value="{{ticket.dataJsonSet.use_time}}"/>
+				</mp-cell>
+			</block>
+
+      <block wx:if="{{isShowExpireTime}}">
+        <mp-cell prop="startDate" title="开始日期" ext-class="">
+          <picker data-field="startDate" mode="date" value="{{startDate}}" start="2015-01-01" end="2050-01-01" bindchange="bindDateChange" disabled="{{isDisabled}}">
+            <view class="weui-input">{{ticket.dataJsonSet.start_use_time}}</view>
+          </picker>
+        </mp-cell>
+
+        <mp-cell prop="endDate" title="结束日期" ext-class="">
+          <picker data-field="endDate" mode="date" value="{{endDate}}" start="2015-01-01" end="2050-01-01" bindchange="bindDateChange" disabled="{{isDisabled}}">
+            <view class="weui-input">{{ticket.dataJsonSet.end_use_time}}</view>
+          </picker>
+        </mp-cell>
+      </block>
+			
+		</mp-cells>
+	</mp-form>
+</view>

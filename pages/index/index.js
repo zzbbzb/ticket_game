@@ -445,4 +445,10 @@ Page({
     })
   },
 
+  catchTap: function()
+  {
+    console.log("catchTap")
+    return false;
+  }
+
 })

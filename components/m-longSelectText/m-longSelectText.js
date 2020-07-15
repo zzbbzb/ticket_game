@@ -39,22 +39,22 @@ Component({
       let delta = systemInfo.windowWidth / 750
       let deletBtnWidth = (200 * delta).toFixed(0)
       let deletBtnHeight = (80 * delta).toFixed(0)
-      console.log("handlelongTap systemInfo=", systemInfo)
-      console.log("handlelongTap deletBtnWidth=", deletBtnWidth)
-      console.log("handlelongTap windowWidth=", systemInfo.windowWidth)
-      console.log("handlelongTap windowHeight=", systemInfo.windowHeight)
+      // console.log("handlelongTap systemInfo=", systemInfo)
+      // console.log("handlelongTap deletBtnWidth=", deletBtnWidth)
+      // console.log("handlelongTap windowWidth=", systemInfo.windowWidth)
+      // console.log("handlelongTap windowHeight=", systemInfo.windowHeight)
 
       
       let left = e.touches[0].clientX
       let top = e.touches[0].clientY
-      console.log("handlelongTap e.touches[0].clientX=", e.touches[0].clientX)
-      console.log("handlelongTap (left + deletBtnWidth)=",(parseInt(left) + parseInt(deletBtnWidth)))
+      // console.log("handlelongTap e.touches[0].clientX=", e.touches[0].clientX)
+      // console.log("handlelongTap (left + deletBtnWidth)=",(parseInt(left) + parseInt(deletBtnWidth)))
       if((parseInt(left) + parseInt(deletBtnWidth)) >= systemInfo.windowWidth){
         left = left - deletBtnWidth
       }
 
-      console.log("handlelongTap e.touches[0].clientY=", e.touches[0].clientY)
-      console.log("handlelongTap (top + deletBtnHeight)=", (parseInt(top) + parseInt(deletBtnHeight)))
+      // console.log("handlelongTap e.touches[0].clientY=", e.touches[0].clientY)
+      // console.log("handlelongTap (top + deletBtnHeight)=", (parseInt(top) + parseInt(deletBtnHeight)))
       
       if((parseInt(top) + parseInt(deletBtnHeight)) >= systemInfo.windowHeight){
         top = top - deletBtnHeight

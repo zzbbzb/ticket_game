@@ -19,9 +19,9 @@
 						<m-ticket ticket="{{ticketList[index]}}" 
 											isShowExpireTime="{{ticketList[index].checked}}" 
 											isExpireTimeCanTap="{{true}}" bind:updateTime="changeTicketTime" 
-											data-index="{{index}}">
+											data-index="{{index}}" isViewShowExpireTime="{{false}}">
 							<view class="ticket_slot btn" slot="ticket_slot">
-								<checkbox value="{{index}}" checked="{{item.checked}}" />
+								<checkbox value="{{index}}" checked="{{item.checked}}" catch:tap="catchTap"/>
 							</view>
 						</m-ticket>
 					</m-longSelectText>

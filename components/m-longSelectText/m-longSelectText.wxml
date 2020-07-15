@@ -1,11 +1,11 @@
 <!--components/m-longSelectText/m-longSelectText.wxml-->
 <block wx:if="{{show}}">
-  <view bindlongtap="handlelongTap" capture-catch:touchmove='btntouchmove'>
+  <view bind:longpress="handlelongTap" capture-catch:touchmove='btntouchmove'>
     <slot></slot>
   </view>
 </block>
 <block wx:else>
-  <view bindlongtap="handlelongTap">
+  <view bind:longpress="handlelongTap" >
     <slot></slot>
   </view>
 </block>

@@ -31,6 +31,10 @@ Component({
     isExpireTimeCanTap: {
       type: Boolean,
       value: false
+    },
+    isViewShowExpireTime: {
+      type: Boolean,
+      value: true
     }
   },
 
@@ -240,6 +244,13 @@ Component({
 
       catchLongTap: function(){
         return false
+      },
+
+      viewTicketInfo: function(){
+        console.log("viewTicketInfo")
+        wx.navigateTo({
+          url: '/pages/viewUpdateTicket/viewUpdateTicket?isShowExpireTime=' + this.data.isViewShowExpireTime + "&ticket=" + JSON.stringify(this.data.ticket),
+        })
       }
     }
   })

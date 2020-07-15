@@ -1,12 +1,12 @@
 <!--components/m-ticket/m-ticket.wxml-->
-<view class="ticket_container">
+<view class="ticket_container" bind:tap="viewTicketInfo">
 	<block wx:if="{{isFinish}}">
 		<image mode="widthFix" class="finishImg" src="/asserts/images/message/finish.png"></image>
 	</block>
 	<view class="ticket_giving_name">
 		{{ticket.dataJsonSet.giving_name}}
 	</view>
-	<view class="ticket_line"></view>
+	<view class="ticket_line"></view> 
 	<view class="ticket_content">
 		<view class="ticket_head">
 			<view class="ticket_head_name">{{ticket.dataJsonSet.ticket_name}}</view>
