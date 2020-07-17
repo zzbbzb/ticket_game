@@ -47,7 +47,11 @@
 				
 			</block>
 
-			<image class="btn" src="/asserts/images/btns/add.png" bindtap="tapAddTicket"></image>
+			<view style="position: relative;margin-right: 10px;">
+        <image class="btn" src="/asserts/images/btns/add.png" bindtap="tapAddTicket"></image>
+        <mp-badge content="{{addCount}}次" style="position: absolute;top: -.4em;right: -.4em;"/>
+      </view>
+			
 		</view>
 	</block>
 

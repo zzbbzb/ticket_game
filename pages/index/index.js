@@ -16,7 +16,8 @@ Page({
     canShareNum: 0,
     canShare: false,
     error: "",
-    scrollOffset: 0
+    scrollOffset: 0,
+    addCount: 3
   },
 
   onLoad: function () {

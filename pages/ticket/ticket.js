@@ -97,6 +97,10 @@ Page({
     console.log("this.ticketList=", this.data.ticketList)
   },
 
+  // onTabClick: function(e){
+  //   console.log("onTabClick=", e)
+  // },
+
   onChange(e) {
     const index = e.detail.index
     this.setData({

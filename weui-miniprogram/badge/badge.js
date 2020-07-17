@@ -82,12 +82,12 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 5:
+/***/ 15:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -95,51 +95,16 @@ module.exports =
 
 Component({
     options: {
-        addGlobalClass: true,
-        pureDataPattern: /^_/,
-        multipleSlots: true
+        addGlobalClass: true
     },
     properties: {
-        tabs: { type: Array, value: [] },
-        tabClass: { type: String, value: '' },
-        swiperClass: { type: String, value: '' },
-        swiperStyle: { type: String, value: ''},
-        activeClass: { type: String, value: '' },
-        tabUnderlineColor: { type: String, value: '#07c160' },
-        tabActiveTextColor: { type: String, value: '#000000' },
-        tabInactiveTextColor: { type: String, value: '#000000' },
-        tabBackgroundColor: { type: String, value: '#ffffff' },
-        activeTab: { type: Number, value: 0 },
-        swipeable: { type: Boolean, value: true },
-        animation: { type: Boolean, value: false },
-        duration: { type: Number, value: 50 }
-    },
-    data: {
-        currentView: 0
-    },
-    observers: {
-        activeTab: function activeTab(_activeTab) {
-            var len = this.data.tabs.length;
-            if (len === 0) return;
-            var currentView = _activeTab - 1;
-            if (currentView < 0) currentView = 0;
-            if (currentView > len - 1) currentView = len - 1;
-            this.setData({ currentView: currentView });
-        }
-    },
-    lifetimes: {
-        created: function created() {}
-    },
-    methods: {
-        handleTabClick: function handleTabClick(e) {
-            var index = e.currentTarget.dataset.index;
-            this.setData({ activeTab: index });
-            this.triggerEvent('tabclick', { index: index });
+        extClass: {
+            type: String,
+            value: ''
         },
-        handleSwiperChange: function handleSwiperChange(e) {
-            var index = e.detail.current;
-            this.setData({ activeTab: index });
-            this.triggerEvent('change', { index: index });
+        content: {
+            type: String,
+            value: ''
         }
     }
 });

@@ -227,6 +227,13 @@ Page({
     await this.uploadFormData();
 
     console.log("退出添加券")
+    const pages = getCurrentPages()
+ 
+    const prevPage = pages[pages.length-2] // 上一页
+    // 调用上一个页面的setData 方法，将数据存储
+    prevPage.setData({
+      addCount: prevPage.data.addCount - 1
+    })
 
     wx.navigateBack({
       delta: this.data.backDelta

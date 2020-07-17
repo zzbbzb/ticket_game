@@ -1,6 +1,6 @@
 <!--pages/ticket/ticket.wxml-->
 <view class="container">
-	<mp-tabs tabs="{{tabs}}" activeTab="{{activeTab}}" swiperClass="weui-tabs-swiper" swiperStyle="height:{{swiperHeight}}px" bindtabclick="onTabCLick" bindchange="onChange" activeClass="tab-bar-title__selected">
+	<mp-tabs tabs="{{tabs}}" activeTab="{{activeTab}}" swiperClass="weui-tabs-swiper" swiperStyle="height:{{swiperHeight}}px" bindtabclick="onTabClick" bindchange="onChange" activeClass="tab-bar-title__selected">
 		<block wx:for="{{tabs}}" wx:key="title">
 			<view class="tab-content" slot="tab-content-{{index}}">
 				<block wx:if="{{index == 0}}">
