@@ -235,6 +235,9 @@ Page({
       addCount: prevPage.data.addCount - 1
     })
 
+    // 更新用户增加次数
+    
+
     wx.navigateBack({
       delta: this.data.backDelta
     });

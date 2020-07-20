@@ -17,7 +17,8 @@ Page({
     canShare: false,
     error: "",
     scrollOffset: 0,
-    addCount: 3
+    addCount: 0,
+    shareCount: 0
   },
 
   onLoad: function () {
@@ -300,11 +301,28 @@ Page({
       this.updataUserInfoAndGetOtherInfo();
 
       console.log("写入数据库 UserInfo")
-      // 写入数据库 UserInfo
-      await this.addUserInfo();
+      // 更新数据库 UserInfo
+      await this.updateUserInfo();
 
       await this.getTickets();
     }
+  },
+
+  async updateUserInfo() {
+    await wx.cloud.callFunction({
+      name: "updateData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
+        "whereObject": {
+          "_openid": app.globalData.openId
+        },
+        "updateData": {
+          "dataJsonSet.userInfo": app.globalData.userInfo
+        }
+      }
+    }).then((res)=>{
+      console.log(res)
+    })
   },
 
   // 写入userInfo数据库

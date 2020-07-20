@@ -31,11 +31,12 @@
 		<view class="funcBtns">
 			<block wx:if="{{isShowGiving}}">
 				<block wx:if="{{!canShare}}">
-					<view capture-catch:touchstart="handleShareError">
+					<view style="position: relative;margin-right: 10px;" capture-catch:touchstart="handleShareError">
 						<button class='btn sharebtn givingBtn' open-type="share">
 							<image class="btn givingImg" src="/asserts/images/btns/giving.png" 
 										 bindtap="tapShare"></image>
 						</button>
+						<mp-badge content="{{shareCount}}次" style="position: absolute;top: -.4em;right: -.4em;"/>
 					</view>
 				</block>
 				<block wx:else>

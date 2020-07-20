@@ -68,12 +68,17 @@ Page({
 
   // 写入userInfo数据库
   async addUserInfo() {
+
+    console.log("addUserInfo userInfo =", userInfo)
+
     await wx.cloud.callFunction({
       name: "addData",
       data: {
         "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
         "dataJsonSet": {
-          "userInfo": app.globalData.userInfo
+          "userInfo": app.globalData.userInfo,
+          "share_count": 3,
+          "add_count": 2
         },
         "delBeforeAdd": true
       }
