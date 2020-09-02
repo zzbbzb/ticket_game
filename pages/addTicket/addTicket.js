@@ -224,23 +224,31 @@ Page({
   // 更新表单数据并且返回主页面
   async upLoadFormDataAndReturn() {
 
-    await this.uploadFormData();
+      await this.uploadFormData();
 
-    console.log("退出添加券")
-    const pages = getCurrentPages()
- 
-    const prevPage = pages[pages.length-2] // 上一页
-    // 调用上一个页面的setData 方法，将数据存储
-    prevPage.setData({
-      addCount: prevPage.data.addCount - 1
+      console.log("退出添加券")
+  
+      wx.navigateBack({
+        delta: this.data.backDelta
+      });
+  },
+  
+  async updateAddCount(num)
+  {
+    await wx.cloud.callFunction({
+      name: "updateData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_EXTRA_INFO,
+        "whereObject": {
+          "_openid": app.globalData.openId
+        },
+        "updateData": {
+          "dataJsonSet.add_count": num
+        }
+      }
+    }).then(res => {
+      console.log("成功保存,", res)
     })
-
-    // 更新用户增加次数
-    
-
-    wx.navigateBack({
-      delta: this.data.backDelta
-    });
   },
 
   // 更新form中的数据
@@ -300,18 +308,37 @@ Page({
         // 检测结束时间不能小于开始时间
         console.log(this.data.formData["startDate"] )
         console.log(this.data.formData["endDate"] )
+        
+        const pages = getCurrentPages()
+        const prevPage = pages[pages.length-2] // 上一页
+         
         if (this.data.formData["startDate"] > this.data.formData["endDate"]) {
           this.setData({
             error: "结束时间不能小于开始时间",
             validateFormState: false
           })
-        } else {
+        }
+        else if(prevPage.data.addCount <= 0)
+        {
+          this.setData({
+            error: "没有增加券的次数",
+            validateFormState: false
+          })
+        }
+        else
+        {
+            // 调用上一个页面的setData 方法，将数据存储
+          prevPage.setData({
+            addCount: prevPage.data.addCount - 1
+          })
+      
+            // 更新用户增加次数
+          this.updateAddCount(prevPage.data.addCount);
           // 校验通过
           this.setData({
             validateFormState: true
           })
         }
-
       }
     })
   },

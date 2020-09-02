@@ -12,16 +12,9 @@ exports.main = async (event, context) => {
   let dataBaseName = event.dataBaseName
   let whereObject = event.whereObject
   
-  const wxContext = cloud.getWXContext()
+  const { OPENID } = cloud.getWXContext()
 
   const db_database = db.collection(dataBaseName)
 
   return await db_database.where(whereObject).get()
-
-  // return {
-  //   event,
-  //   openid: wxContext.OPENID,
-  //   appid: wxContext.APPID,
-  //   unionid: wxContext.UNIONID,
-  // }
 }

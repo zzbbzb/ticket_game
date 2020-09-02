@@ -41,9 +41,66 @@ Page({
       userInfo: app.globalData.userInfo
     })
 
-    // 跳转页面到index
-    wx.switchTab({      //关闭当前页面，跳转到应用内的某个页面（这个跳转有个坑，就是跳转页面后页面会闪烁一下，完全影响了我自己的操作体验，太缺德了。）
-      url:"/pages/index/index"
+    // 读取分享增加的次数
+    this.getUserExtraInfoOperator()
+
+  },
+
+  async getUserExtraInfoOperator()
+  {
+    await this.getUserExtraInfo();
+  },
+
+    // 写入userInfo数据库
+  async getUserExtraInfo() {
+    console.log("_openid", app.globalData.openId)
+    await wx.cloud.callFunction({
+      name: "queryData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_EXTRA_INFO,
+        "whereObject": {
+          "_openid": app.globalData.openId
+        }
+      }
+    }).then(res => {
+      if(res.result.data.length == 0)
+      {
+        this.addUserExtraInfo();
+      }
+      else
+      {
+        app.globalData.counts.addCount = res.result.data[0].dataJsonSet.add_count;
+        app.globalData.counts.shareCount = res.result.data[0].dataJsonSet.share_count;
+
+        //跳转页面到index
+        wx.switchTab({      //关闭当前页面，跳转到应用内的某个页面（这个跳转有个坑，就是跳转页面后页面会闪烁一下，完全影响了我自己的操作体验，太缺德了。）
+          url:"/pages/index/index"
+        })
+      }
+      console.log("getUserExtraInfo",res)
+    })
+  },
+
+  async addUserExtraInfo() {
+    console.log("_openid", app.globalData.openId)
+    await wx.cloud.callFunction({
+      name: "addData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_EXTRA_INFO,
+        "dataJsonSet": {
+          "add_count": config.POINT.DEFAULT_ADD_COUNT,
+          "share_count": config.POINT.DEFAULT_SHARE_COUNT
+        }
+      }
+    }).then(res => {
+      console.log(res)
+      app.globalData.counts.addCount = config.POINT.DEFAULT_ADD_COUNT;
+      app.globalData.counts.shareCount = config.POINT.DEFAULT_SHARE_COUNT;
+      
+      //跳转页面到index
+      wx.switchTab({      //关闭当前页面，跳转到应用内的某个页面（这个跳转有个坑，就是跳转页面后页面会闪烁一下，完全影响了我自己的操作体验，太缺德了。）
+        url:"/pages/index/index"
+      })
     })
   },
 
@@ -69,16 +126,14 @@ Page({
   // 写入userInfo数据库
   async addUserInfo() {
 
-    console.log("addUserInfo userInfo =", userInfo)
+    console.log("addUserInfo userInfo =", app.globalData.userInfo)
 
     await wx.cloud.callFunction({
       name: "addData",
       data: {
         "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
         "dataJsonSet": {
-          "userInfo": app.globalData.userInfo,
-          "share_count": 3,
-          "add_count": 2
+          "userInfo": app.globalData.userInfo
         },
         "delBeforeAdd": true
       }

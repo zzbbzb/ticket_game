@@ -37,6 +37,10 @@ Page({
     //   }
     // }
     console.log("index onlauch")
+    this.setData({
+      addCount: app.globalData.counts.addCount, 
+      shareCount: app.globalData.counts.shareCount
+    })
 
     // for (let i = 0, lenI = ticketList.length; i < lenI; ++i) {
     //   ticketList[i].checked = false
