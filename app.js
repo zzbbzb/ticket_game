@@ -212,7 +212,7 @@ App({
     messageNum: 0,
     counts: {
       addCount: 0,    // 添加新的券的次数
-      shareCount: 0   // 分享的次数
+      // shareCount: 0   // 分享的次数
     }
   }
 })

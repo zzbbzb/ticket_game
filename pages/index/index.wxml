@@ -14,14 +14,10 @@
 
 			<checkbox-group bindchange="checkboxChange">
 				<block wx:for="{{ticketList}}" wx:key="index">
-					<m-longSelectText scrollOffset="{{scrollOffset}}" index="{{index}}"
-														bind:deleteTicket="deleteTicket">
-						<m-ticket ticket="{{ticketList[index]}}" 
-											isShowExpireTime="{{ticketList[index].checked}}" 
-											isExpireTimeCanTap="{{true}}" bind:updateTime="changeTicketTime" 
-											data-index="{{index}}" isViewShowExpireTime="{{false}}">
+					<m-longSelectText scrollOffset="{{scrollOffset}}" index="{{index}}" bind:deleteTicket="deleteTicket">
+						<m-ticket ticket="{{ticketList[index]}}" isShowExpireTime="{{ticketList[index].checked}}" isExpireTimeCanTap="{{true}}" bind:updateTime="changeTicketTime" data-index="{{index}}" isViewShowExpireTime="{{false}}">
 							<view class="ticket_slot btn" slot="ticket_slot">
-								<checkbox value="{{index}}" checked="{{item.checked}}" catch:tap="catchTap"/>
+								<checkbox value="{{index}}" checked="{{item.checked}}" catch:tap="catchTap" />
 							</view>
 						</m-ticket>
 					</m-longSelectText>
@@ -30,29 +26,30 @@
 		</view>
 		<view class="funcBtns">
 			<block wx:if="{{isShowGiving}}">
-				<block wx:if="{{!canShare}}">
-					<view style="position: relative;margin-right: 10px;" capture-catch:touchstart="handleShareError">
-						<button class='btn sharebtn givingBtn' open-type="share">
-							<image class="btn givingImg" src="/asserts/images/btns/giving.png" 
-										 bindtap="tapShare"></image>
-						</button>
-						<mp-badge content="{{shareCount}}次" style="position: absolute;top: -.4em;right: -.4em;"/>
-					</view>
-				</block>
-				<block wx:else>
+				<!-- <block wx:if="{{!canShare}}"> -->
+				<view wx:if="{{!canShare}}" class="selectContainer" bind:tap="handleShareError">
+				</view>
+				<view>
+					<button class='btn sharebtn givingBtn' open-type="share">
+						<image class="btn givingImg" src="/asserts/images/btns/giving.png" ></image>
+					</button>
+					<!-- <mp-badge content="{{shareCount}}次" style="position: absolute;top: -.4em;right: -.4em;" /> -->
+				</view>
+			</block>
+			<!-- <block wx:else>
 					<button class='btn sharebtn givingBtn' open-type="share">
 						<image class="btn givingImg" src="/asserts/images/btns/giving.png" 
 									 bindtap="tapShare"></image>
 					</button>
-				</block>
-				
-			</block>
+				</block> -->
+
+			<!-- </block> -->
 
 			<view style="position: relative;margin-right: 10px;">
-        <image class="btn" src="/asserts/images/btns/add.png" bindtap="tapAddTicket"></image>
-        <mp-badge content="{{addCount}}次" style="position: absolute;top: -.4em;right: -.4em;"/>
-      </view>
-			
+				<image class="btn" src="/asserts/images/btns/add.png" bindtap="tapAddTicket"></image>
+				<mp-badge content="{{addCount}}次" style="position: absolute;top: -.4em;right: -.4em;" />
+			</view>
+
 		</view>
 	</block>
 

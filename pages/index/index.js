@@ -18,7 +18,7 @@ Page({
     error: "",
     scrollOffset: 0,
     addCount: 0,
-    shareCount: 0
+    // shareCount: 0
   },
 
   onLoad: function () {
@@ -39,7 +39,7 @@ Page({
     console.log("index onlauch")
     this.setData({
       addCount: app.globalData.counts.addCount, 
-      shareCount: app.globalData.counts.shareCount
+      // shareCount: app.globalData.counts.shareCount
     })
 
     // for (let i = 0, lenI = ticketList.length; i < lenI; ++i) {
@@ -273,9 +273,20 @@ Page({
   // 点击添加券
   tapAddTicket: function () {
     console.log("index/tapAddTicket")
-    wx.navigateTo({
-      url: '/pages/addTicket/addTicket',
-    })
+
+    if(this.data.shareCount > 0)
+    {
+      wx.navigateTo({
+        url: '/pages/addTicket/addTicket',
+      })
+    }
+    else
+    {
+      this.setData({
+        error: "新建券次数为0"
+      })
+    }
+    
   },
 
   // 更新玩家信息和其它信息
@@ -347,9 +358,32 @@ Page({
 
   handleShareError: function () {
     console.log("catch handleShareError")
+    // this.setData({
+    //   error: "分享券可用时间不能为0000/00/00"
+    // })
+
+    let errorMsg = ""
+    if(!this.data.canShare)
+    {
+      errorMsg = "分享券可用时间不能为0000/00/00"
+    }
+
+    if(errorMsg != "")
+    {
+      this.setData({
+        error: errorMsg
+      })
+    }
+   
+  },
+
+  handleShareCount:function()
+  {
+    console.log("handleShareCount")
     this.setData({
-      error: "分享券可用时间不能为0000/00/00"
+      shareCount: this.data.shareCount - 1
     })
+    
   },
 
   // 转发
@@ -370,6 +404,7 @@ Page({
         selectCount = selectCount + 1
       }
     }
+    
     if (selectCount != 0) {
       curTimeStamp = new Date().getTime();
       // 券id
