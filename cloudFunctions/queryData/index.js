@@ -2,7 +2,8 @@
 const cloud = require('wx-server-sdk')
 
 cloud.init({
-  env:'test-qjl9w',
+  env: cloud.DYNAMIC_CURRENT_ENV,
+  // env:'giftbox-fwj0j'
 })
 
 let db = cloud.database()

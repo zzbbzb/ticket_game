@@ -274,7 +274,7 @@ Page({
   tapAddTicket: function () {
     console.log("index/tapAddTicket")
 
-    if(this.data.shareCount > 0)
+    if(this.data.addCount > 0)
     {
       wx.navigateTo({
         url: '/pages/addTicket/addTicket',
@@ -424,11 +424,35 @@ Page({
     console.log("curTimeStamp=", curTimeStamp)
     console.log("selectedTicketList=", JSON.stringify(selectedTicketList))
 
+    let randTitleIndex = this.randomNum(0, config.SHARE_TITLE_COUNT - 1);
+
+    let shareTitleIndex = "TITLE_" + randTitleIndex.toString();
+
+    let shareTitle = config.SHARE_TITLE[shareTitleIndex];
+
+    console.log("randTitleIndex=", randTitleIndex)
+    console.log("shareTitleIndex=", shareTitleIndex)
+    console.log("shareTitle=", shareTitle)
+
     return {
-      title: '自定义转发标题',
+      title: shareTitle,
       path: '/pages/receiveTicket/receiveTicket?givingOpenId=' + app.globalData.openId + "&givingTicketId=" + givingTicketId + "&curTimeStamp=" + curTimeStamp + "&selectedTicketList=" + JSON.stringify(selectedTicketList)
     }
   },
+
+  randomNum: function(minNum,maxNum){ 
+    switch(arguments.length){ 
+        case 1: 
+            return parseInt(Math.random()*minNum+1,10); 
+        break; 
+        case 2: 
+            return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10); 
+        break; 
+            default: 
+                return 0; 
+            break; 
+    } 
+  } ,
 
   changeTicketTime: function (options) {
     console.log("changeTicketTime options=", options)

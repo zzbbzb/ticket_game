@@ -16,6 +16,7 @@ App({
         //   如不填则使用默认环境（第一个创建的环境）
         // env: 'my-env-id',
         env: 'test-qjl9w',
+        // env: 'giftbox-fwj0j',
         traceUser: true,
       })
     }
