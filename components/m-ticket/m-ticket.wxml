@@ -11,7 +11,7 @@
 		<view class="ticket_head">
 			<view class="ticket_head_name">{{ticket.dataJsonSet.ticket_name}}</view>
 			<view class="ticket_head_detail">{{ticket.dataJsonSet.ticket_detail_info}}</view>
-			<slot name="ticket_slot"></slot>
+			<slot name="ticket_slot" catch:tap="catchEvent"></slot>
 		</view>
 		<view class="ticket_foot">
 			<view class="ticket_use_count">

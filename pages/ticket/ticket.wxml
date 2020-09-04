@@ -24,7 +24,7 @@
 												isShowExpireTime="{{true}}" isExpireTimeCanTap="{{false}}">
 								<view class="ticket_slot" slot="ticket_slot"> 
 									<block wx:if="{{ticketList[activeTab][index].dataJsonSet.ticket_use_state === 1}}">
-										<button data-index="{{index}}" class="btn" type="primary" bindtap="tapFinish">完成</button>
+										<button data-index="{{index}}" class="btn" type="primary" bind:tap="tapFinish">完成</button>
 									</block>
 									<block wx:else>
 										<button data-index="{{index}}" class="btn t" type="primary">确认使用</button>

@@ -1,3 +1,4 @@
+const config = require("./utils/config.js");
 //app.js
 App({
   async onLaunch() {
@@ -21,6 +22,8 @@ App({
       })
     }
 
+    console.log("app.js config.DATA_BASE_NAME.MESSAGE= ", config.DATA_BASE_NAME.MESSAGE);
+
     await wx.cloud.callFunction({
       name: "getopenid",
     }).then(res => {
@@ -29,7 +32,7 @@ App({
           
       // 监听消息, 更新消息
       const db = wx.cloud.database()
-      db.collection("Message")
+      db.collection("Ticket_Game_Message")
       .where({
         // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
         'dataJsonSet.receipt_openId': this.globalData.openId,
@@ -71,7 +74,7 @@ App({
         }
       })
 
-      db.collection("Message")
+      db.collection("Ticket_Game_Message")
       .where({
         // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
         'dataJsonSet.send_openId': this.globalData.openId,

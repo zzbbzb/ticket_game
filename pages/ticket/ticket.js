@@ -108,6 +108,12 @@ Page({
     })
     // this.getTickets(this.data.activeTab);
   },
+  
+  catchEvent: function()
+  {
+    console.log("catchEvent")
+    return false;
+  },
 
   /* 使用 */
   tapUse: function(options){
@@ -175,7 +181,7 @@ Page({
             "whereObject": {
               "_openid": app.globalData.openId,
               "dataJsonSet.ticket_state": 1,
-              "dataJsonSet.ticket_id": useTicketId
+              "_id": useTicketId
             },
             "updateData":{
               "dataJsonSet.ticket_state": 2

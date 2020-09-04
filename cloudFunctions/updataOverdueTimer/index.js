@@ -13,7 +13,7 @@ let db = cloud.database()
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   let curData = new Date().getTime()
-  await db.collection("Ticket").where({
+  await db.collection("Ticket_Game_Ticket").where({
     "_openid": wxContext.OPENID,
     "dataJsonSet.ticket_state": 1
   }).get().then(res=>{
@@ -24,7 +24,7 @@ exports.main = async (event, context) => {
       if(findList[i].dataJsonSet.end_use_time < curData)
       {
         (async()=>{
-          await db.collection("Ticket").where({
+          await db.collection("Ticket_Game_Ticket").where({
             "dataJsonSet.ticket_id": findList[i].dataJsonSet.ticket_id
           }).update({
             data:{

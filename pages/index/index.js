@@ -52,7 +52,7 @@ Page({
   onShow: function () {
     console.log("index onShow")
     if (watcher == null) {
-      watcher = db.collection("Ticket")
+      watcher = db.collection(config.DATA_BASE_NAME.TICKET)
         .where({
           // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
           _openid: app.globalData.open_id,

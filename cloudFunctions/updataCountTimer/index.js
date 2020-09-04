@@ -15,7 +15,7 @@ exports.main = async (event, context) => {
   let curData = new Date().getTime()
   console.log("openid=", wxContext.OPENID)
 
-  await db.collection("UserExtraInfo").where({
+  await db.collection("Ticket_Game_UserExtraInfo").where({
     "dataJsonSet.add_count": _.lte(0),
   }).update({
     data:{
