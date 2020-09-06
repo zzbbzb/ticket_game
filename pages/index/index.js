@@ -42,6 +42,9 @@ Page({
       // shareCount: app.globalData.counts.shareCount
     })
 
+    console.log("index messageNum= ", app.globalData.messageNum)
+    app.UpdateListNum(app.globalData.messageNum);
+
     // for (let i = 0, lenI = ticketList.length; i < lenI; ++i) {
     //   ticketList[i].checked = false
     // }
@@ -55,12 +58,13 @@ Page({
       watcher = db.collection(config.DATA_BASE_NAME.TICKET)
         .where({
           // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
-          _openid: app.globalData.open_id,
-          'dataJsonSet.giving_openid': app.globalData.open_id
+          '_openid': app.globalData.openId,
+          'dataJsonSet.giving_openid': app.globalData.openId
         })
         // 发起监听
         .watch({
           onChange: (snapshot) => {
+            console.log('app.globalData.openId', app.globalData.openId)
             console.log('app snapshot onShow', snapshot)
             if (snapshot.docChanges != undefined && snapshot.docChanges.length != 0) {
               for (let i = 0; i < snapshot.docChanges.length; i++) {

@@ -17,16 +17,18 @@
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,
+		"compileHotReLoad": false,
 		"babelSetting": {
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
 		},
+		"useIsolateContext": true,
 		"useCompilerModule": true,
 		"userConfirmedUseCompilerModuleSwitch": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.12.2",
+	"libVersion": "2.12.1",
 	"appid": "wx8a4a57a2ba7d31a4",
 	"projectname": "ticket_game",
 	"cloudfunctionRoot": "cloudFunctions/",

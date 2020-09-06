@@ -11,7 +11,7 @@
 					<image class="stamp" mode="widthFit" src="/asserts/images/message/refuse.png"></image>
 				</block>
 			</block>
-			<view class="info">
+			<view class="{{item.dataJsonSet.msg_receipt === 1? 'infoReceipt': 'info'}}">
 				<text>{{item.dataJsonSet.msg_info}}</text>
 			</view>
 			<view class="btns" wx:if="{{item.dataJsonSet.msg_receipt === 0}}">

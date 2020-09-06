@@ -19,7 +19,7 @@ exports.main = async (event, context) => {
     "dataJsonSet.add_count": _.lte(0),
   }).update({
     data:{
-      "dataJsonSet.add_count": 3
+      "dataJsonSet.add_count": 2
     }
   })
 

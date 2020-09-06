@@ -1,17 +1,37 @@
 /* pages/message/message.wxss */
 .btns{
+  position: absolute;
+  bottom: 1vh;
+  left: 10vw;
+  right: 10vw;
   display: flex;
   flex-direction: row;
-  
+  justify-content: space-around;
 }
 
-.info{
-  display: flex;
-  justify-content: center;
+.info {
+  position: relative;
+  text-align: center;
+  top: 10%;
+}
+
+.infoReceipt{
+  position: relative;
+  top: 50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align: center;
+  /* display: flex;
+  justify-content: center; */
 }
 
 text {
   font-size: 45rpx;
+  font-weight: 310rpx;
+}
+
+button{
+  display: inline;
 }
 
 .btn {
@@ -19,13 +39,16 @@ text {
   font-size: 40rpx;
   line-height: 65rpx;
   font-size: 35rpx;
-  margin-bottom: 10rpx;
 }
 
 .message {
-  border:6rpx solid black;
-  margin:10rpx 40rpx 10rpx 40rpx;
+  /* border:6rpx solid black; */
+  margin:20rpx 40rpx 10rpx 40rpx;
   height: 15vh;
+  background-color: white;
+  flex-direction: column;
+  border-radius: 15rpx;
+  box-shadow: 1px 1px 2px #88888850;
   position: relative;
 }
 
@@ -36,4 +59,8 @@ text {
   right:-8rpx;
   top: -6vh;
   clip:rect(6vh 242rpx 21vh 0rpx);
+}
+
+page {
+  background-color: #f6f6f6;
 }

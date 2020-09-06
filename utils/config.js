@@ -9,7 +9,7 @@ const DATA_BASE_NAME = {
 };
 
 const POINT = {
-  DEFAULT_ADD_COUNT: 3,
+  DEFAULT_ADD_COUNT: 2,
   DEFAULT_SHARE_COUNT: 3,
 };
 

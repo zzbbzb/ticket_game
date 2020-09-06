@@ -32,7 +32,7 @@ App({
           
       // 监听消息, 更新消息
       const db = wx.cloud.database()
-      db.collection("Ticket_Game_Message")
+      db.collection(config.DATA_BASE_NAME.MESSAGE)
       .where({
         // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
         'dataJsonSet.receipt_openId': this.globalData.openId,
@@ -46,7 +46,7 @@ App({
             if(snapshot.docChanges[0].dataType === 'init')
             {
               this.globalData.messageNum = snapshot.docChanges.length
-              this.UpdateListNum(this.globalData.messageNum);
+              // this.UpdateListNum(this.globalData.messageNum);
             }
             else{
               let url = this.GetCurrentPageUrl() 
@@ -74,10 +74,10 @@ App({
         }
       })
 
-      db.collection("Ticket_Game_Message")
+      db.collection(config.DATA_BASE_NAME.MESSAGE)
       .where({
         // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
-        'dataJsonSet.send_openId': this.globalData.openId,
+        'dataJsonSet.send_openId': db.command.eq(this.globalData.openId),
         'dataJsonSet.msg_receipt': 0,
         'dataJsonSet.new_type': 1
       })
