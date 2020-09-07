@@ -1,12 +1,12 @@
 {
   "pages": [
-    "pages/login/login",
-    "pages/ticket/ticket",
     "pages/index/index",
+    "pages/ticket/ticket",
     "pages/receiveTicket/receiveTicket",
     "pages/addTicket/addTicket",
     "pages/message/message",
-    "pages/viewUpdateTicket/viewUpdateTicket"
+    "pages/viewUpdateTicket/viewUpdateTicket",
+    "pages/login/login"
   ],
   "window": {
     "backgroundTextStyle": "light",

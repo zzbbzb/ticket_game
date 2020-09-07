@@ -22,10 +22,12 @@ Page({
   },
 
   onLoad: function () {
+    this.getUserExtraInfoOperator()
     if (app.globalData.userInfo) {
       console.log("onLoad app.globalData.userInfo")
       this.updataUserInfoAndGetOtherInfo()
     }
+
     // else {
     //   // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
     //   // 所以此处加入 callback 以防止这种情况
@@ -37,11 +39,7 @@ Page({
     //   }
     // }
     console.log("index onlauch")
-    this.setData({
-      addCount: app.globalData.counts.addCount, 
-      // shareCount: app.globalData.counts.shareCount
-    })
-
+    
     console.log("index messageNum= ", app.globalData.messageNum)
     app.UpdateListNum(app.globalData.messageNum);
 
@@ -136,6 +134,66 @@ Page({
         })
     }
 
+  },
+
+  // 获得玩家额外的信息
+  async getUserExtraInfoOperator()
+  {
+    console.log("getUserExtraInfoOperator")
+    await this.getUserExtraInfo();
+  },
+
+  // 获得玩家额外的信息细节
+  async getUserExtraInfo() {
+    console.log("_openid", app.globalData.openId)
+    await wx.cloud.callFunction({
+      name: "queryData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_EXTRA_INFO,
+        "whereObject": {
+          "_openid": app.globalData.openId
+        }
+      }
+    }).then(res => {
+      if(res.result.data.length == 0)
+      {
+        this.addUserExtraInfo();
+      }
+      else
+      {
+        app.globalData.counts.addCount = res.result.data[0].dataJsonSet.add_count;
+        app.globalData.counts.shareCount = res.result.data[0].dataJsonSet.share_count;
+        this.setData({
+          addCount: app.globalData.counts.addCount, 
+          // shareCount: app.globalData.counts.shareCount
+        })
+    
+      }
+      console.log("getUserExtraInfo",res)
+    })
+  },
+
+  // 增加玩家额外信息
+  async addUserExtraInfo() {
+    console.log("_openid", app.globalData.openId)
+    await wx.cloud.callFunction({
+      name: "addData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_EXTRA_INFO,
+        "dataJsonSet": {
+          "add_count": config.POINT.DEFAULT_ADD_COUNT,
+          "share_count": config.POINT.DEFAULT_SHARE_COUNT
+        }
+      }
+    }).then(res => {
+      console.log(res)
+      app.globalData.counts.addCount = config.POINT.DEFAULT_ADD_COUNT;
+      app.globalData.counts.shareCount = config.POINT.DEFAULT_SHARE_COUNT;
+      this.setData({
+        addCount: app.globalData.counts.addCount, 
+        // shareCount: app.globalData.counts.shareCount
+      })
+    })
   },
 
   checkboxChange: function (e) {
@@ -257,22 +315,22 @@ Page({
     })
   },
 
-  async getUserName(openId, name) {
-    await wx.cloud.callFunction({
-      name: "queryData",
-      data: {
-        "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
-        "whereObject": {
-          "_openid": openId,
-        },
-      }
-    }).then(res => {
-      const findList = res.result.data
-      if (findList.length > 0) {
-        name = findList[0].dataJsonSet.nickName
-      }
-    })
-  },
+  // async getUserName(openId, name) {
+  //   await wx.cloud.callFunction({
+  //     name: "queryData",
+  //     data: {
+  //       "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
+  //       "whereObject": {
+  //         "_openid": openId,
+  //       },
+  //     }
+  //   }).then(res => {
+  //     const findList = res.result.data
+  //     if (findList.length > 0) {
+  //       name = findList[0].dataJsonSet.nickName
+  //     }
+  //   })
+  // },
 
   // 点击添加券
   tapAddTicket: function () {
@@ -305,60 +363,60 @@ Page({
     await this.getTickets();
   },
 
-  // 获得玩家信息
-  getUserInfo: function (e) {
-    console.log("getUserInfo")
-    console.log(e)
-    this.getUserInfoOperate(e)
+  // // 获得玩家信息
+  // getUserInfo: function (e) {
+  //   console.log("getUserInfo")
+  //   console.log(e)
+  //   this.getUserInfoOperate(e)
 
-  },
+  // },
 
-  // 获得玩家信息的操作
-  async getUserInfoOperate(e) {
-    if ('userInfo' in e.detail) {
-      app.globalData.userInfo = e.detail.userInfo;
-      this.updataUserInfoAndGetOtherInfo();
+  // // 获得玩家信息的操作
+  // async getUserInfoOperate(e) {
+  //   if ('userInfo' in e.detail) {
+  //     app.globalData.userInfo = e.detail.userInfo;
+  //     this.updataUserInfoAndGetOtherInfo();
 
-      console.log("写入数据库 UserInfo")
-      // 更新数据库 UserInfo
-      await this.updateUserInfo();
+  //     console.log("写入数据库 UserInfo")
+  //     // 更新数据库 UserInfo
+  //     await this.updateUserInfo();
 
-      await this.getTickets();
-    }
-  },
+  //     await this.getTickets();
+  //   }
+  // },
 
-  async updateUserInfo() {
-    await wx.cloud.callFunction({
-      name: "updateData",
-      data: {
-        "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
-        "whereObject": {
-          "_openid": app.globalData.openId
-        },
-        "updateData": {
-          "dataJsonSet.userInfo": app.globalData.userInfo
-        }
-      }
-    }).then((res)=>{
-      console.log(res)
-    })
-  },
+  // async updateUserInfo() {
+  //   await wx.cloud.callFunction({
+  //     name: "updateData",
+  //     data: {
+  //       "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
+  //       "whereObject": {
+  //         "_openid": app.globalData.openId
+  //       },
+  //       "updateData": {
+  //         "dataJsonSet.userInfo": app.globalData.userInfo
+  //       }
+  //     }
+  //   }).then((res)=>{
+  //     console.log(res)
+  //   })
+  // },
 
-  // 写入userInfo数据库
-  async addUserInfo() {
-    await wx.cloud.callFunction({
-      name: "addData",
-      data: {
-        "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
-        "dataJsonSet": {
-          "userInfo": app.globalData.userInfo
-        },
-        "delBeforeAdd": true
-      }
-    }).then(res => {
-      console.log(res)
-    })
-  },
+  // // 写入userInfo数据库
+  // async addUserInfo() {
+  //   await wx.cloud.callFunction({
+  //     name: "addData",
+  //     data: {
+  //       "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
+  //       "dataJsonSet": {
+  //         "userInfo": app.globalData.userInfo
+  //       },
+  //       "delBeforeAdd": true
+  //     }
+  //   }).then(res => {
+  //     console.log(res)
+  //   })
+  // },
 
   handleShareError: function () {
     console.log("catch handleShareError")

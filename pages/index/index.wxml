@@ -2,7 +2,7 @@
 <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
 <view class="container">
 
-	<block wx:if="{{hasUserInfo}}">
+	<!-- <block wx:if="{{hasUserInfo}}"> -->
 		<view class="ticketContainer">
 
 			<label class="weui-cell weui-check__label" wx:for="{{items}}" wx:key="{{item.value}}">
@@ -51,6 +51,6 @@
 			</view>
 
 		</view>
-	</block>
+	<!-- </block> -->
 
 </view>
