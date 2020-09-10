@@ -10,6 +10,7 @@ Page({
     motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
+    hasAddCount: false,
     ticketList: [],
     isShowGiving: false,
     // selectUseTime: {},
@@ -18,31 +19,67 @@ Page({
     error: "",
     scrollOffset: 0,
     addCount: 0,
+    showDialog: false
     // shareCount: 0
   },
 
   onLoad: function () {
-    this.getUserExtraInfoOperator()
+
+    console.log("index onlauch")
+
     if (app.globalData.userInfo) {
       console.log("onLoad app.globalData.userInfo")
-      this.updataUserInfoAndGetOtherInfo()
+      let flag = true
+      this.updataUserInfoAndGetOtherInfo(flag)
+    }    
+    else{
+      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+      // 所以此处加入 callback 以防止这种情况
+      console.log("app.userInfoReadyCallback")
+      console.log("app", app.globalData.userInfo)
+    
+      app.userInfoReadyCallback = res => {
+        let flag = res.authSetting['scope.userInfo']? true: false;
+        this.updataUserInfoAndGetOtherInfo(flag)
+      }
+    }
+        
+    if(!app.globalData.hasAddCount)
+    {
+      app.userExtraInfoCallBack = res => {
+        console.log("userExtraInfoCallBack")
+        if("data" in res.result)
+        {
+          app.globalData.counts.addCount = res.result.data[0].dataJsonSet.add_count;
+          app.globalData.counts.shareCount = res.result.data[0].dataJsonSet.share_count;
+        }
+        else{
+          app.globalData.counts.addCount = config.POINT.DEFAULT_ADD_COUNT;
+          app.globalData.counts.shareCount = config.POINT.DEFAULT_SHARE_COUNT;
+        }
+        
+        app.globalData.hasAddCount = true;
+        this.setData({
+          addCount: app.globalData.counts.addCount, 
+          hasAddCount:app.globalData.hasAddCount 
+          // shareCount: app.globalData.counts.shareCount
+        })
+      }
     }
 
-    // else {
-    //   // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-    //   // 所以此处加入 callback 以防止这种情况
-    //   console.log("app.userInfoReadyCallback")
-    //   console.log("app", app.globalData.userInfo)
-
-    //   app.userInfoReadyCallback = res => {
-    //     this.updataUserInfoAndGetOtherInfo()
-    //   }
-    // }
-    console.log("index onlauch")
-    
+    if(app.globalData.openId)
+    {
+      this.initTicketWatch();
+    }
+    else 
+    {
+      app.initTicketWatchCallback = res => {
+        this.initTicketWatch();
+      }
+    }
+      
     console.log("index messageNum= ", app.globalData.messageNum)
     app.UpdateListNum(app.globalData.messageNum);
-
     // for (let i = 0, lenI = ticketList.length; i < lenI; ++i) {
     //   ticketList[i].checked = false
     // }
@@ -52,147 +89,93 @@ Page({
 
   onShow: function () {
     console.log("index onShow")
+    console.log('app.globalData.openId', app.globalData.openId)
     if (watcher == null) {
-      watcher = db.collection(config.DATA_BASE_NAME.TICKET)
-        .where({
-          // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
-          '_openid': app.globalData.openId,
-          'dataJsonSet.giving_openid': app.globalData.openId
-        })
-        // 发起监听
-        .watch({
-          onChange: (snapshot) => {
-            console.log('app.globalData.openId', app.globalData.openId)
-            console.log('app snapshot onShow', snapshot)
-            if (snapshot.docChanges != undefined && snapshot.docChanges.length != 0) {
-              for (let i = 0; i < snapshot.docChanges.length; i++) {
-                console.log('app snapshot onShow', snapshot.docChanges[i].dataType)
-                if (snapshot.docChanges[i].dataType === 'add') {
-                  let tmpList = this.data.ticketList;
-                  console.log('app snapshot docs', snapshot.docChanges[i].doc)
-
-                  tmpList.push(snapshot.docChanges[i].doc);
-                  this.setData({
-                    ticketList: tmpList
-                  })
-                  console.log("this.data.ticketList=", this.data.ticketList)
-                } else if (snapshot.docChanges[i].dataType === 'remove') {
-                  let newList = this.data.ticketList
-                  let canShareNum = this.data.canShareNum
-                  let shareFlag = this.data.isShowGiving
-                  let canShare = this.data.canShare
-                  let selectCount = 0
-                  let deleteIndex = -1
-                  for (let j = 0; j < newList.length; j++) {
-                    if('checked' in newList[j] && newList[j].checked === true){
-                      selectCount ++
-                    }
-                    if (newList[j]._id === snapshot.docChanges[i].doc._id) {   
-                      if('checked' in newList[j] && newList[j].checked === true){
-                        selectCount = selectCount - 1
-                        if('changeTime' in newList[j] && newList[j].changeTime === true){
-                          canShareNum = canShareNum - 1
-                        }
-                      }
-                      deleteIndex = j;
-                    }
-                  }
-
-                  if(deleteIndex !== -1){
-                    newList.splice(deleteIndex, 1);
-                  }
-                  console.log("ticket=", newList)
-
-                  if (selectCount > 0) {
-                    shareFlag = true
-                  } else {
-                    shareFlag = false
-                  }
-
-                  if (canShareNum === selectCount) {
-                    canShare = true
-                  }else{
-                    canShare = false
-                  }
-
-                  console.log("deleteTicket canShareNum=", canShareNum)
-                  console.log("deleteTicket selectCount=", selectCount)
-
-                  this.setData({
-                    ticketList: newList,
-                    isShowGiving: shareFlag,
-                    canShareNum: canShareNum,
-                    canShare: canShare
-                  })
-                }
-              }
-            }
-          },
-          onError: (err) => {
-            console.error('the watch closed because of error', err)
-          }
-        })
+     
     }
 
   },
 
-  // 获得玩家额外的信息
-  async getUserExtraInfoOperator()
+  initTicketWatch: function()
   {
-    console.log("getUserExtraInfoOperator")
-    await this.getUserExtraInfo();
-  },
-
-  // 获得玩家额外的信息细节
-  async getUserExtraInfo() {
-    console.log("_openid", app.globalData.openId)
-    await wx.cloud.callFunction({
-      name: "queryData",
-      data: {
-        "dataBaseName": config.DATA_BASE_NAME.USER_EXTRA_INFO,
-        "whereObject": {
-          "_openid": app.globalData.openId
-        }
-      }
-    }).then(res => {
-      if(res.result.data.length == 0)
-      {
-        this.addUserExtraInfo();
-      }
-      else
-      {
-        app.globalData.counts.addCount = res.result.data[0].dataJsonSet.add_count;
-        app.globalData.counts.shareCount = res.result.data[0].dataJsonSet.share_count;
-        this.setData({
-          addCount: app.globalData.counts.addCount, 
-          // shareCount: app.globalData.counts.shareCount
-        })
-    
-      }
-      console.log("getUserExtraInfo",res)
+    watcher = db.collection(config.DATA_BASE_NAME.TICKET)
+    .where({
+      // 填入当前用户 openid，或如果使用了安全规则，则 {openid} 即代表当前用户 openid
+      '_openid': app.globalData.openId,
+      'dataJsonSet.giving_openid': app.globalData.openId
     })
-  },
+    // 发起监听
+    .watch({
+      onChange: (snapshot) => {
+        console.log('app.globalData.openId', app.globalData.openId)
+        console.log('app snapshot onShow', snapshot)
+        if (snapshot.docChanges != undefined && snapshot.docChanges.length != 0) {
+          for (let i = 0; i < snapshot.docChanges.length; i++) {
+            console.log('app snapshot onShow', snapshot.docChanges[i].dataType)
+            if (snapshot.docChanges[i].dataType === 'add') {
+              let tmpList = this.data.ticketList;
+              console.log('app snapshot docs', snapshot.docChanges[i].doc)
 
-  // 增加玩家额外信息
-  async addUserExtraInfo() {
-    console.log("_openid", app.globalData.openId)
-    await wx.cloud.callFunction({
-      name: "addData",
-      data: {
-        "dataBaseName": config.DATA_BASE_NAME.USER_EXTRA_INFO,
-        "dataJsonSet": {
-          "add_count": config.POINT.DEFAULT_ADD_COUNT,
-          "share_count": config.POINT.DEFAULT_SHARE_COUNT
+              tmpList.push(snapshot.docChanges[i].doc);
+              this.setData({
+                ticketList: tmpList
+              })
+              console.log("this.data.ticketList=", this.data.ticketList)
+            } else if (snapshot.docChanges[i].dataType === 'remove') {
+              let newList = this.data.ticketList
+              let canShareNum = this.data.canShareNum
+              let shareFlag = this.data.isShowGiving
+              let canShare = this.data.canShare
+              let selectCount = 0
+              let deleteIndex = -1
+              for (let j = 0; j < newList.length; j++) {
+                if('checked' in newList[j] && newList[j].checked === true){
+                  selectCount ++
+                }
+                if (newList[j]._id === snapshot.docChanges[i].doc._id) {   
+                  if('checked' in newList[j] && newList[j].checked === true){
+                    selectCount = selectCount - 1
+                    if('changeTime' in newList[j] && newList[j].changeTime === true){
+                      canShareNum = canShareNum - 1
+                    }
+                  }
+                  deleteIndex = j;
+                }
+              }
+
+              if(deleteIndex !== -1){
+                newList.splice(deleteIndex, 1);
+              }
+              console.log("ticket=", newList)
+
+              if (selectCount > 0) {
+                shareFlag = true
+              } else {
+                shareFlag = false
+              }
+
+              if (canShareNum === selectCount) {
+                canShare = true
+              }else{
+                canShare = false
+              }
+
+              console.log("deleteTicket canShareNum=", canShareNum)
+              console.log("deleteTicket selectCount=", selectCount)
+
+              this.setData({
+                ticketList: newList,
+                isShowGiving: shareFlag,
+                canShareNum: canShareNum,
+                canShare: canShare
+              })
+            }
+          }
         }
+      },
+      onError: (err) => {
+        console.error('the watch closed because of error', err)
       }
-    }).then(res => {
-      console.log(res)
-      app.globalData.counts.addCount = config.POINT.DEFAULT_ADD_COUNT;
-      app.globalData.counts.shareCount = config.POINT.DEFAULT_SHARE_COUNT;
-      this.setData({
-        addCount: app.globalData.counts.addCount, 
-        // shareCount: app.globalData.counts.shareCount
-      })
     })
   },
 
@@ -352,38 +335,45 @@ Page({
   },
 
   // 更新玩家信息和其它信息
-  async updataUserInfoAndGetOtherInfo() {
-    app.globalData.hasUserInfo = true;
-    console.log("app.globalData.hasUserInfo=", app.globalData.hasUserInfo)
-    this.setData({
-      hasUserInfo: app.globalData.hasUserInfo,
-      userInfo: app.globalData.userInfo
-    })
-
+  async updataUserInfoAndGetOtherInfo(res) {
+      app.globalData.hasUserInfo = res;
+      console.log("app.globalData.hasUserInfo=", app.globalData.hasUserInfo)
+      this.setData({
+        hasUserInfo: app.globalData.hasUserInfo,
+        userInfo: app.globalData.userInfo
+      })
     await this.getTickets();
   },
 
-  // // 获得玩家信息
-  // getUserInfo: function (e) {
-  //   console.log("getUserInfo")
-  //   console.log(e)
-  //   this.getUserInfoOperate(e)
+  // 获得玩家信息
+  getUserInfo: function (e) {
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    })
+    this.getUserInfoOperate(e)
+  },
 
-  // },
+  // 获得玩家信息的操作
+  async getUserInfoOperate(e) {
+    console.log("index getUserInfo e=", e)
+    if ('userInfo' in e.detail.detail) {
+      app.globalData.userInfo = e.detail.detail.userInfo;
+      // this.updataUserInfoAndGetOtherInfo();
 
-  // // 获得玩家信息的操作
-  // async getUserInfoOperate(e) {
-  //   if ('userInfo' in e.detail) {
-  //     app.globalData.userInfo = e.detail.userInfo;
-  //     this.updataUserInfoAndGetOtherInfo();
-
-  //     console.log("写入数据库 UserInfo")
-  //     // 更新数据库 UserInfo
-  //     await this.updateUserInfo();
-
-  //     await this.getTickets();
-  //   }
-  // },
+      console.log("写入数据库 UserInfo")
+      // 更新数据库 UserInfo
+      await this.addUserInfo();
+      // 更新Ticket中的UserName
+      app.globalData.hasUserInfo = true
+      this.setData({
+        showDialog: false,
+        hasUserInfo: app.globalData.hasUserInfo 
+      })
+      wx.hideLoading()
+      // await this.getTickets();
+    }
+  },
 
   // async updateUserInfo() {
   //   await wx.cloud.callFunction({
@@ -402,21 +392,28 @@ Page({
   //   })
   // },
 
-  // // 写入userInfo数据库
-  // async addUserInfo() {
-  //   await wx.cloud.callFunction({
-  //     name: "addData",
-  //     data: {
-  //       "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
-  //       "dataJsonSet": {
-  //         "userInfo": app.globalData.userInfo
-  //       },
-  //       "delBeforeAdd": true
-  //     }
-  //   }).then(res => {
-  //     console.log(res)
-  //   })
-  // },
+  // 写入userInfo数据库
+  async addUserInfo() {
+    await wx.cloud.callFunction({
+      name: "addData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
+        "dataJsonSet": {
+          "userInfo": app.globalData.userInfo
+        },
+        "delBeforeAdd": true
+      }
+    }).then(res => {
+      console.log(res)
+    })
+  },
+  showLogin:function()
+  {
+    console.log("showLogin=", this.data.showDialog)
+    this.setData({
+      showDialog: true
+    })
+  },
 
   handleShareError: function () {
     console.log("catch handleShareError")

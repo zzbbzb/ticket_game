@@ -126,7 +126,7 @@ Component({
         }
     },
     data: {
-        innerShow: false
+        innerShow: false,
     },
     ready: function ready() {
         var buttons = this.data.buttons;
@@ -146,6 +146,11 @@ Component({
     },
 
     methods: {
+        getUserInfo: function(e)
+        {
+            console.log("getUserInfo=", e)
+            this.triggerEvent('getUserInfo', e, {});
+        },
         buttonTap: function buttonTap(e) {
             var index = e.currentTarget.dataset.index;
 

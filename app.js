@@ -22,14 +22,18 @@ App({
       })
     }
 
-    console.log("app.js config.DATA_BASE_NAME.MESSAGE= ", config.DATA_BASE_NAME.MESSAGE);
-
     await wx.cloud.callFunction({
       name: "getopenid",
     }).then(res => {
-      console.log("成功", res.result.openid);
+      console.log("getopenid", res.result.openid);
       this.globalData.openId = res.result.openid
-          
+      
+      this.getUserExtraInfoOperator();
+      if(this.initTicketWatchCallback)
+      {
+        this.initTicketWatchCallback(res);
+      }
+
       // 监听消息, 更新消息
       const db = wx.cloud.database()
       db.collection(config.DATA_BASE_NAME.MESSAGE)
@@ -151,7 +155,6 @@ App({
     });
     console.log("getUserOpenId")
 
-
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -159,6 +162,7 @@ App({
           // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
           wx.getUserInfo({
             success: res => {
+              console.log("getUserInfo res =",res)
               // 可以将 res 发送给后台解码出 unionId
               this.globalData.userInfo = res.userInfo
 
@@ -174,7 +178,87 @@ App({
             }
           })
         }
+        else
+        {
+          // 没有授权
+          console.log("getUserInfo res =",res)
+          if (this.userInfoReadyCallback) {
+            this.userInfoReadyCallback(res)
+          }
+        }
       }
+    })
+  },
+
+  // 获得玩家额外的信息
+  getUserExtraInfoOperator: function()
+  {
+    console.log("getUserExtraInfoOperator")
+    this.getUserExtraInfo();
+    console.log("getUserExtraInfoOperator end")
+  },
+  
+  // 获得玩家额外的信息细节
+  async getUserExtraInfo() {
+    await wx.cloud.callFunction({
+      name: "queryData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_EXTRA_INFO,
+        "whereObject": {
+          "_openid": this.globalData.openId
+        }
+      }
+    }).then(res => {
+      if(res.result.data.length == 0)
+      {
+        this.addUserExtraInfo();
+      }
+      else
+      {
+        console.log("getUserExtraInfo")
+        this.globalData.counts.addCount = res.result.data[0].dataJsonSet.add_count;
+        this.globalData.counts.shareCount = res.result.data[0].dataJsonSet.share_count;
+        // this.setData({
+        //   addCount: app.globalData.counts.addCount, 
+        //   // shareCount: app.globalData.counts.shareCount
+        // })
+        this.globalData.hasAddCount = true
+        if(this.userExtraInfoCallBack)
+        {
+          this.userExtraInfoCallBack(res)
+        }
+      }
+      console.log("getUserExtraInfo",res)
+    })
+  },
+  
+  // 增加玩家额外信息
+  async addUserExtraInfo() {
+    console.log("_openid", this.globalData.openId)
+    await wx.cloud.callFunction({
+      name: "addData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_EXTRA_INFO,
+        "dataJsonSet": {
+          "add_count": config.POINT.DEFAULT_ADD_COUNT,
+          "share_count": config.POINT.DEFAULT_SHARE_COUNT
+        }
+      }
+    }).then(res => {
+      console.log("addUserExtraInfo res=", res)
+      this.globalData.counts.addCount = config.POINT.DEFAULT_ADD_COUNT;
+      this.globalData.counts.shareCount = config.POINT.DEFAULT_SHARE_COUNT;
+      this.globalData.hasAddCount = true
+      if(this.userExtraInfoCallBack)
+      {
+        this.userExtraInfoCallBack(res)
+      }
+      // app.globalData.counts.addCount = config.POINT.DEFAULT_ADD_COUNT;
+      // app.globalData.counts.shareCount = config.POINT.DEFAULT_SHARE_COUNT;
+      // this.setData({
+      //   addCount: app.globalData.counts.addCount, 
+      //   // shareCount: app.globalData.counts.shareCount
+      // })
     })
   },
 
@@ -212,6 +296,7 @@ App({
   globalData: {
     userInfo: null,
     hasUserInfo: false,
+    hasAddCount: false,
     openId: "",
     messageNum: 0,
     counts: {

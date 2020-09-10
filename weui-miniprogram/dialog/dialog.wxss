@@ -8,6 +8,12 @@
   background: rgba(0, 0, 0, 0.6)
 }
 
+button{
+  padding: 0rpx;
+  line-height: 64px;
+  /* margin: auto; */
+}
+
 .weui-mask_transparent {
   position: fixed;
   z-index: 1000;

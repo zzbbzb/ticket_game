@@ -263,6 +263,13 @@ Page({
     let use_count = 'ticketUseCount' in this.data.formData ?  this.data.formData["ticketUseCount"]: "0";
     let use_time = 'useTime' in this.data.formData ?  this.data.formData["useTime"]: "0";
     
+    
+    let nickName = ' '
+    if(app.globalData.userInfo != null && "nickName" in app.globalData.userInfo)
+    {
+      nickName = app.globalData.userInfo.nickName
+    }
+    
     // 保存券进入数据库
     await wx.cloud.callFunction({
       name: "addData",
@@ -281,7 +288,7 @@ Page({
           "use_time": use_time,
           "ticket_state": 0,
           "giving_openid": app.globalData.openId,
-          "giving_name": app.globalData.userInfo.nickName == undefined? "": app.globalData.userInfo.nickName,
+          "giving_name": nickName,
           "ticket_use_state": 0
         },
         "waitFlag": true

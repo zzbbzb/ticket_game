@@ -55,6 +55,7 @@ page {
   padding-left: 20rpx;
   /* background-color: blue; */
   border-radius: 30rpx 30rpx 0 0;
+  height: 5vh;
 }
 
 .ticket_content {

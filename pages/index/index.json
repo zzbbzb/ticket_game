@@ -4,6 +4,7 @@
     "m-ticket": "/components/m-ticket/m-ticket",
     "mp-toptips": "/weui-miniprogram/toptips/toptips",
     "m-longSelectText": "/components/m-longSelectText/m-longSelectText",
-    "mp-badge": "/weui-miniprogram/badge/badge"
+    "mp-badge": "/weui-miniprogram/badge/badge",
+    "mp-dialog": "/weui-miniprogram/dialog/dialog"
   }
 }

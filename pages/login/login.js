@@ -25,15 +25,14 @@ Page({
       // 所以此处加入 callback 以防止这种情况
       console.log("app.userInfoReadyCallback")
       console.log("app", app.globalData.userInfo)
-
-      app.userInfoReadyCallback = res => {
         this.updataUserInfoAndGetOtherInfo()
-      }
+    
     }
     console.log("index onlauch")
   },
 
   updataUserInfoAndGetOtherInfo: function() {
+    
     app.globalData.hasUserInfo = true;
     console.log("app.globalData.hasUserInfo=", app.globalData.hasUserInfo)
     this.setData({

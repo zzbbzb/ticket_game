@@ -11,7 +11,14 @@
       </view>
       <view class="weui-dialog__ft">
         <block wx:if="{{buttons && buttons.length}}">
-          <view wx:for="{{buttons}}" class="weui-dialog__btn {{item.className}} {{item.extClass}}" data-index="{{index}}" bindtap="buttonTap">{{item.text}}</view>
+          <block wx:for="{{buttons}}">
+            <block wx:if="{{item.text === '登录'}}">
+              <button class="weui-dialog__btn {{item.className}} {{item.extClass}}" data-index="{{index}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" >{{item.text}}</button>
+            </block>
+            <block wx:else>
+              <view class="weui-dialog__btn {{item.className}} {{item.extClass}}" data-index="{{index}}" bindtap="buttonTap">{{item.text}}</view>
+            </block>
+          </block>
           <!-- <view class="weui-dialog__btn" bindtap="confirm">确认</view> -->
         </block>
         <slot name="footer"></slot>
