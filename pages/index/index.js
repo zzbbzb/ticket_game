@@ -365,15 +365,38 @@ Page({
       console.log("写入数据库 UserInfo")
       // 更新数据库 UserInfo
       await this.addUserInfo();
-      // 更新Ticket中的UserName
+      // 更新Ticket中的UserName TODO
+      await this.updataUserTicket();
+
       app.globalData.hasUserInfo = true
       this.setData({
         showDialog: false,
-        hasUserInfo: app.globalData.hasUserInfo 
+        hasUserInfo: app.globalData.hasUserInfo,
+        userInfo: app.globalData.userInfo
       })
       wx.hideLoading()
       // await this.getTickets();
     }
+  },
+
+  async updataUserTicket()
+  {
+    console.log("updataUserTicket userinfo=", app.globalData.userInfo )
+    await wx.cloud.callFunction({
+      name: "updateData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.TICKET,
+        "whereObject": {
+          "_openid": app.globalData.openId,
+          "dataJsonSet.giving_openid":app.globalData.openId
+        },
+        "updateData": {
+          "dataJsonSet.giving_name": app.globalData.userInfo.nickName
+        }
+      }
+    }).then((res)=>{
+      console.log(res)
+    })
   },
 
   // async updateUserInfo() {
