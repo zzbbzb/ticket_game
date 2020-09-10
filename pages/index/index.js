@@ -39,8 +39,9 @@ Page({
       console.log("app", app.globalData.userInfo)
     
       app.userInfoReadyCallback = res => {
-        let flag = res.authSetting['scope.userInfo']? true: false;
-        this.updataUserInfoAndGetOtherInfo(flag)
+        console.log("userInfoReadyCallback res=", res)
+        // let flag = 'scope.userInfo' in res.authSetting? false: true;
+        this.updataUserInfoAndGetOtherInfo(res)
       }
     }
         
@@ -347,10 +348,6 @@ Page({
 
   // 获得玩家信息
   getUserInfo: function (e) {
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
     this.getUserInfoOperate(e)
   },
 
@@ -358,6 +355,10 @@ Page({
   async getUserInfoOperate(e) {
     console.log("index getUserInfo e=", e)
     if ('userInfo' in e.detail.detail) {
+      wx.showLoading({
+        title: '加载中',
+        mask: true
+      })
       app.globalData.userInfo = e.detail.detail.userInfo;
       // this.updataUserInfoAndGetOtherInfo();
 
