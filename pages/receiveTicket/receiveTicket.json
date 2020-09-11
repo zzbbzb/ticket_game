@@ -1,6 +1,7 @@
 {
   "component": true,
   "usingComponents": {
-    "m-ticket": "/components/m-ticket/m-ticket"
+    "m-ticket": "/components/m-ticket/m-ticket",
+    "mp-dialog": "/weui-miniprogram/dialog/dialog"
   }
 }

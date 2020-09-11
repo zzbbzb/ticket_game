@@ -11,49 +11,135 @@ Page({
   data: {
     statusBarHeight: 0,
     receiveState: 1,
-    givingTicketId: ""
+    givingTicketId: "",
+    hasUserInfo: false,
+    showDialog: false,
+    isOwn: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log("receiveTicket onLoad=", options)
-    let givingTicketId = options.givingTicketId;
-    let giving_openId = options.givingOpenId
-    let selectedTicketList = options.selectedTicketList
-    let curTimeStamp = options.curTimeStamp
-    let givingTicketList = JSON.parse(selectedTicketList);
 
-    console.log("givingTicketList=", givingTicketList)
+    if(this.data.isOwn)
+    {
+      wx.hideHomeButton();
+      console.log("receiveTicket onLoad=", options)
+      let givingTicketId = options.givingTicketId;
+      let giving_openId = options.givingOpenId
+      let selectedTicketList = options.selectedTicketList
+      let curTimeStamp = options.curTimeStamp
+      let givingTicketList = JSON.parse(selectedTicketList);
 
-    // 获得逻辑
-    let systemInfo = wx.getSystemInfoSync();
-    let windowHeight = systemInfo.windowHeight;
-    let pxToRpxScale = 750 / systemInfo.windowWidth;
-    let statusBarHeight = systemInfo.statusBarHeight * pxToRpxScale
+      console.log("givingTicketList=", givingTicketList)
 
-    let ticketContainerHeight = windowHeight - statusBarHeight
-    console.log(ticketContainerHeight)
-    
-    this.setData({
-      ticketContainerHeight: ticketContainerHeight,
-      statusBarHeight: statusBarHeight,
-      ticketList: givingTicketList,
-      givingTicketId: givingTicketId
-    })
+      // 获得逻辑
+      let systemInfo = wx.getSystemInfoSync();
+      let windowHeight = systemInfo.windowHeight;
+      let pxToRpxScale = 750 / systemInfo.windowWidth;
+      let statusBarHeight = systemInfo.statusBarHeight * pxToRpxScale
 
-    console.log("this.data.ticketList=", this.data.ticketList)
+      let ticketContainerHeight = windowHeight - statusBarHeight
+      console.log(ticketContainerHeight)
+      
+      this.setData({
+        ticketContainerHeight: ticketContainerHeight,
+        statusBarHeight: statusBarHeight,
+        ticketList: givingTicketList,
+        givingTicketId: givingTicketId
+      })
 
-    // 检测是否存在这个givingTicketId
-    let ticketOptions = {
-      givingTicketId: givingTicketId,
-      givingTicketList: givingTicketList,
-      curTimeStamp: curTimeStamp,
-      givingOpenId: giving_openId
+      console.log("this.data.ticketList=", this.data.ticketList)
+
+      // 检测是否存在这个givingTicketId
+      let ticketOptions = {
+        givingTicketId: givingTicketId,
+        givingTicketList: givingTicketList,
+        curTimeStamp: curTimeStamp,
+        givingOpenId: giving_openId
+      }
+      this.hadSelectedTickets(givingTicketId, ticketOptions);
     }
-    this.hadSelectedTickets(givingTicketId, ticketOptions);
 
+  },
+
+  showLogin:function()
+  {
+    console.log("showLogin=", this.data.showDialog)
+    this.setData({
+      showDialog: true
+    })
+  },
+
+   // 获得玩家信息
+   getUserInfo: function (e) {
+    this.getUserInfoOperate(e)
+  },
+
+  // 获得玩家信息的操作
+  async getUserInfoOperate(e) {
+    console.log("index getUserInfo e=", e)
+    if ('userInfo' in e.detail.detail) {
+      wx.showLoading({
+        title: '加载中',
+        mask: true
+      })
+      app.globalData.userInfo = e.detail.detail.userInfo;
+      // this.updataUserInfoAndGetOtherInfo();
+
+      console.log("写入数据库 UserInfo")
+      // 更新数据库 UserInfo
+      await this.addUserInfo();
+
+      // 更新Ticket中的UserName
+      await this.updataUserTicket();
+
+      app.globalData.hasUserInfo = true
+      this.setData({
+        showDialog: false,
+        hasUserInfo: app.globalData.hasUserInfo,
+        userInfo: app.globalData.userInfo
+      })
+      wx.hideLoading()
+      // await this.getTickets();
+    }
+  },
+
+  async updataUserTicket()
+  {
+    console.log("updataUserTicket userinfo=", app.globalData.userInfo )
+    await wx.cloud.callFunction({
+      name: "updateData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.TICKET,
+        "whereObject": {
+          "_openid": app.globalData.openId,
+          "dataJsonSet.giving_openid":app.globalData.openId
+        },
+        "updateData": {
+          "dataJsonSet.giving_name": app.globalData.userInfo.nickName
+        }
+      }
+    }).then((res)=>{
+      console.log(res)
+    })
+  },
+
+  // 写入userInfo数据库
+  async addUserInfo() {
+    await wx.cloud.callFunction({
+      name: "addData",
+      data: {
+        "dataBaseName": config.DATA_BASE_NAME.USER_INFO,
+        "dataJsonSet": {
+          "userInfo": app.globalData.userInfo
+        },
+        "delBeforeAdd": true
+      }
+    }).then(res => {
+      console.log(res)
+    })
   },
 
   async addGivingTicketInfo(options){

@@ -217,7 +217,7 @@ App({
       }
       else
       {
-        console.log("getUserExtraInfo")
+        console.log("getUserExtraInfo res=", res)
         this.globalData.counts.addCount = res.result.data[0].dataJsonSet.add_count;
         this.globalData.counts.shareCount = res.result.data[0].dataJsonSet.share_count;
         // this.setData({

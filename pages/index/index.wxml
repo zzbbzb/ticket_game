@@ -28,7 +28,7 @@
 		<view class="funcBtns">
 			<block wx:if="{{isShowGiving}}">
 				<!-- <block wx:if="{{!canShare}}"> -->
-				<view wx:if="{{!canShare}}" class="selectContainer" bind:tap="handleShareError">
+				<view wx:if="{{!hasUserInfo || !canShare}}" class="selectContainer" bind:tap="handleShareError">
 					<view wx:if="{{!hasUserInfo}}" class="selectContainer" catch:tap="showLogin">
 					</view>
 				</view>

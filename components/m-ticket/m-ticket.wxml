@@ -38,7 +38,7 @@
 
 </view>
 
-<mp-dialog title="设置过期时间" show="{{dialogShow}}" bindbuttontap="tapDialogButton" buttons="{{[{text: '确认'}]}}">
+<mp-dialog title="设置过期时间" show="{{dialogShow}}" bindbuttontap="tapDialogButton" buttons="{{[{text: '确认'}]}}" bind:close="tapDialogClose">
 
 	<view slot="bd">
 		<mp-form id="form" rules="{{rules}}" models="{{formData}}">
@@ -46,14 +46,14 @@
 				<mp-cell prop="startDate" title="开始日期：" ext-class="">
 					<picker data-field="startDate" mode="date" value="{{startDate}}" 
 									start="2015-01-01" end="2050-01-01" bindchange="bindDateChange">
-						<view class="weui-input">{{start_use_time}}</view>
+						<view class="weui-input">{{setting_start_use_time}}</view>
 					</picker>
 				</mp-cell>
 
 				<mp-cell prop="endDate" title="结束日期：" ext-class="">
 					<picker data-field="endDate" mode="date" value="{{endDate}}"
 									start="2015-01-01" end="2050-01-01" bindchange="bindDateChange">
-						<view class="weui-input">{{end_use_time}}</view>
+						<view class="weui-input">{{setting_end_use_time}}</view>
 					</picker>
 				</mp-cell>
 			</mp-cells>

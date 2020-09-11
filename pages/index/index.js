@@ -48,7 +48,7 @@ Page({
     if(!app.globalData.hasAddCount)
     {
       app.userExtraInfoCallBack = res => {
-        console.log("userExtraInfoCallBack")
+        console.log("userExtraInfoCallBack res=", res)
         if("data" in res.result)
         {
           app.globalData.counts.addCount = res.result.data[0].dataJsonSet.add_count;
@@ -66,6 +66,17 @@ Page({
           // shareCount: app.globalData.counts.shareCount
         })
       }
+    }
+    else{
+
+      console.log("userExtraInfoCallBack app.globalData.counts.addCount=", app.globalData.counts.addCount)
+      console.log("userExtraInfoCallBack app.globalData.hasAddCount=", app.globalData.hasAddCount)
+
+      this.setData({
+        addCount: app.globalData.counts.addCount, 
+        hasAddCount:app.globalData.hasAddCount 
+        // shareCount: app.globalData.counts.shareCount
+      })
     }
 
     if(app.globalData.openId)
@@ -96,7 +107,7 @@ Page({
     }
 
   },
-
+  
   initTicketWatch: function()
   {
     watcher = db.collection(config.DATA_BASE_NAME.TICKET)
@@ -113,7 +124,19 @@ Page({
         if (snapshot.docChanges != undefined && snapshot.docChanges.length != 0) {
           for (let i = 0; i < snapshot.docChanges.length; i++) {
             console.log('app snapshot onShow', snapshot.docChanges[i].dataType)
-            if (snapshot.docChanges[i].dataType === 'add') {
+            if(snapshot.docChanges[i].dataType === 'update')
+            {
+              let tmpList = this.data.ticketList;
+              for(let i = 0; i < tmpList.length; i++)
+              {
+                tmpList[i].dataJsonSet.giving_name = app.globalData.userInfo.nickName
+              }
+
+              this.setData({
+                ticketList: tmpList
+              })
+            }
+            else if (snapshot.docChanges[i].dataType === 'add') {
               let tmpList = this.data.ticketList;
               console.log('app snapshot docs', snapshot.docChanges[i].doc)
 
@@ -365,7 +388,7 @@ Page({
       console.log("写入数据库 UserInfo")
       // 更新数据库 UserInfo
       await this.addUserInfo();
-      // 更新Ticket中的UserName TODO
+      // 更新Ticket中的UserName
       await this.updataUserTicket();
 
       app.globalData.hasUserInfo = true
@@ -551,6 +574,9 @@ Page({
         selectCount = selectCount + 1
       }
     }
+
+    console.log("selectCount=", selectCount)
+    console.log("this.data.canShareNum=", this.data.canShareNum)
     
     let useTime = {
       start_use_time: start_use_time,
@@ -560,18 +586,26 @@ Page({
     let changeTime = "ticketList[" + index + "].changeTime"
     let ticketUseTime = "ticketList[" + index +"].useTime"
     // ticket.useTime = useTime
+
     let canShare = false
-
-    if (this.data.canShareNum + 1 === selectCount) {
-      canShare = true
+    if(this.data.canShareNum == selectCount)
+    {
+      canShare = true;
     }
-
+    else
+    { 
+      if (this.data.canShareNum + 1 === selectCount) {
+        canShare = true
+        this.data.canShareNum = this.data.canShareNum + 1
+      }
+    }
+   
     this.setData({
       canShare: canShare,
       // [uIndex]: useTime[index],
       [ticketUseTime]: useTime,
       [changeTime]: true,
-      canShareNum: this.data.canShareNum + 1
+      canShareNum: this.data.canShareNum
     })
 
     console.log("changeTicketTime ticketList=", this.data.ticketList)

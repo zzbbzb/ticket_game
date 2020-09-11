@@ -79,7 +79,9 @@ Component({
         end_use_time = util.formatTime(this.data.ticket.dataJsonSet.end_use_time)
         this.setData({
           'start_use_time': start_use_time,
-          'end_use_time': end_use_time
+          'end_use_time': end_use_time,
+          'setting_start_use_time': start_use_time,
+          'setting_end_use_time': end_use_time
         })
       }
       else{
@@ -94,7 +96,9 @@ Component({
 
         this.setData({
           'start_use_time': start_use_time,
-          'end_use_time': end_use_time
+          'end_use_time': end_use_time,
+          'setting_start_use_time': start_use_time,
+          'setting_end_use_time': end_use_time
         })
       }
 
@@ -114,7 +118,9 @@ Component({
       if(value === false){
         this.setData({
           start_use_time: "0000/00/00",
-          end_use_time: "0000/00/00"
+          end_use_time: "0000/00/00",
+          'setting_start_use_time': "0000/00/00",
+          'setting_end_use_time': "0000/00/00"
         })
       }
     }
@@ -164,6 +170,16 @@ Component({
      */
     methods: {
 
+      tapDialogClose: function()
+      {
+        console.log("tapDialogClose")
+        // 清除
+        this.setData({
+          setting_start_use_time: this.data.start_use_time,
+          setting_end_use_time: this.data.end_use_time
+        })
+      },
+
       triggerCountDownFinsh: function(e)
       {
         console.log("triggerCountDownFinsh e=", e)
@@ -188,12 +204,12 @@ Component({
     
         if (field == "startDate") {
           this.setData({
-            start_use_time: date
+            setting_start_use_time: date
           })
           date += " 00:00:00";
         } else {
           this.setData({
-            end_use_time: date
+            setting_end_use_time: date
           })
           date += " 23:59:59";
         }

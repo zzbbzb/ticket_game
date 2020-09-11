@@ -13,7 +13,7 @@
         <block wx:if="{{buttons && buttons.length}}">
           <block wx:for="{{buttons}}">
             <block wx:if="{{item.text === '登录'}}">
-              <button class="weui-dialog__btn {{item.className}} {{item.extClass}}" data-index="{{index}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" >{{item.text}}</button>
+              <button class="loginBtn weui-dialog__btn {{item.className}} {{item.extClass}}" data-index="{{index}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" >{{item.text}}</button>
             </block>
             <block wx:else>
               <view class="weui-dialog__btn {{item.className}} {{item.extClass}}" data-index="{{index}}" bindtap="buttonTap">{{item.text}}</view>
