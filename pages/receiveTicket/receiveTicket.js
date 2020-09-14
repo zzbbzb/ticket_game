@@ -22,7 +22,7 @@ Page({
   onLoad: function (options) {
     console.log("receiveTicket onLoad=", options)
     
-    wx.hideHomeButton();
+    // wx.hideHomeButton();
     
     let givingTicketId = options.givingTicketId;
     let giving_openId = options.givingOpenId
@@ -41,6 +41,11 @@ Page({
         this.setData({
           hasUserInfo: app.globalData.hasUserInfo
         })
+        if(res == false)
+        {
+          app.globalData.shareHasNoLimit = true
+        }
+        
         console.log("receiveTicket app.globalData.hasUserInfo=", app.globalData.hasUserInfo)
       }
     }
@@ -253,11 +258,7 @@ Page({
         await this.addTicket(this.data.ticketList[i]);
       })();
     } 
-    console.log("receiveTicketsDetail")
-    wx.reLaunch({
-      url: '/pages/index/index',
-    })
-    // wx.showHomeButton()
+
   },
 
   async updateGivingTicket(){

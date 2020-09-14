@@ -36,11 +36,16 @@ Page({
       // 所以此处加入 callback 以防止这种情况
       console.log("app.userInfoReadyCallback")
       console.log("app", app.globalData.userInfo)
-    
+      
       app.userInfoReadyCallback = res => {
         console.log("userInfoReadyCallback res=", res)
         // let flag = 'scope.userInfo' in res.authSetting? false: true;
         this.updataUserInfoAndGetOtherInfo(res)
+      }
+      
+      if(app.globalData.shareHasNoLimit)
+      {
+        this.updataUserInfoAndGetOtherInfo(false)
       }
     }
         
