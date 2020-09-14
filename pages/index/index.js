@@ -26,7 +26,6 @@ Page({
   onLoad: function () {
 
     console.log("index onlauch")
-
     if (app.globalData.userInfo) {
       console.log("onLoad app.globalData.userInfo")
       let flag = true

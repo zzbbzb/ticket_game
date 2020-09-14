@@ -14,53 +14,87 @@ Page({
     givingTicketId: "",
     hasUserInfo: false,
     showDialog: false,
-    isOwn: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log("receiveTicket onLoad=", options)
+    
+    wx.hideHomeButton();
+    
+    let givingTicketId = options.givingTicketId;
+    let giving_openId = options.givingOpenId
+    let selectedTicketList = options.selectedTicketList
+    let curTimeStamp = options.curTimeStamp
+    let givingTicketList = JSON.parse(selectedTicketList);
 
-    if(this.data.isOwn)
-    {
-      wx.hideHomeButton();
-      console.log("receiveTicket onLoad=", options)
-      let givingTicketId = options.givingTicketId;
-      let giving_openId = options.givingOpenId
-      let selectedTicketList = options.selectedTicketList
-      let curTimeStamp = options.curTimeStamp
-      let givingTicketList = JSON.parse(selectedTicketList);
+    console.log("givingTicketList=", givingTicketList)
 
-      console.log("givingTicketList=", givingTicketList)
-
-      // 获得逻辑
-      let systemInfo = wx.getSystemInfoSync();
-      let windowHeight = systemInfo.windowHeight;
-      let pxToRpxScale = 750 / systemInfo.windowWidth;
-      let statusBarHeight = systemInfo.statusBarHeight * pxToRpxScale
-
-      let ticketContainerHeight = windowHeight - statusBarHeight
-      console.log(ticketContainerHeight)
-      
-      this.setData({
-        ticketContainerHeight: ticketContainerHeight,
-        statusBarHeight: statusBarHeight,
-        ticketList: givingTicketList,
-        givingTicketId: givingTicketId
-      })
-
-      console.log("this.data.ticketList=", this.data.ticketList)
-
-      // 检测是否存在这个givingTicketId
-      let ticketOptions = {
-        givingTicketId: givingTicketId,
-        givingTicketList: givingTicketList,
-        curTimeStamp: curTimeStamp,
-        givingOpenId: giving_openId
+    if (!app.globalData.userInfo) {
+      console.log("onLoad app.globalData.userInfo")
+      app.userInfoReadyCallback = res => {
+        console.log("userInfoReadyCallback res=", res)
+        // let flag = 'scope.userInfo' in res.authSetting? false: true;
+        app.globalData.hasUserInfo = res;
+        this.setData({
+          hasUserInfo: app.globalData.hasUserInfo
+        })
+        console.log("receiveTicket app.globalData.hasUserInfo=", app.globalData.hasUserInfo)
       }
-      this.hadSelectedTickets(givingTicketId, ticketOptions);
     }
+    else{
+      this.setData({
+        hasUserInfo: app.globalData.hasUserInfo
+      })
+    } 
+
+          
+    if(!app.globalData.hasAddCount)
+    {
+      app.userExtraInfoCallBack = res => {
+        console.log("userExtraInfoCallBack res=", res)
+        if("data" in res.result)
+        {
+          app.globalData.counts.addCount = res.result.data[0].dataJsonSet.add_count;
+          app.globalData.counts.shareCount = res.result.data[0].dataJsonSet.share_count;
+        }
+        else{
+          app.globalData.counts.addCount = config.POINT.DEFAULT_ADD_COUNT;
+          app.globalData.counts.shareCount = config.POINT.DEFAULT_SHARE_COUNT;
+        }
+        
+        app.globalData.hasAddCount = true;
+      }
+    }
+
+    // 获得逻辑
+    let systemInfo = wx.getSystemInfoSync();
+    let windowHeight = systemInfo.windowHeight;
+    let pxToRpxScale = 750 / systemInfo.windowWidth;
+    let statusBarHeight = systemInfo.statusBarHeight * pxToRpxScale
+
+    let ticketContainerHeight = windowHeight - statusBarHeight
+    console.log(ticketContainerHeight)
+    
+    this.setData({
+      ticketContainerHeight: ticketContainerHeight,
+      statusBarHeight: statusBarHeight,
+      ticketList: givingTicketList,
+      givingTicketId: givingTicketId
+    })
+
+    console.log("this.data.ticketList=", this.data.ticketList)
+
+    // 检测是否存在这个givingTicketId
+    let ticketOptions = {
+      givingTicketId: givingTicketId,
+      givingTicketList: givingTicketList,
+      curTimeStamp: curTimeStamp,
+      givingOpenId: giving_openId
+    }
+    this.hadSelectedTickets(givingTicketId, ticketOptions);
 
   },
 
@@ -219,6 +253,11 @@ Page({
         await this.addTicket(this.data.ticketList[i]);
       })();
     } 
+    console.log("receiveTicketsDetail")
+    wx.reLaunch({
+      url: '/pages/index/index',
+    })
+    // wx.showHomeButton()
   },
 
   async updateGivingTicket(){
